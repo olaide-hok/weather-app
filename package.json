@@ -1,0 +1,48 @@
+{
+    "name": "weather-app",
+    "version": "0.1.0",
+    "description": "A weather app to search for weather information by entering a location in the search bar.",
+    "private": true,
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/olaide-hok/weather-app.git"
+    },
+    "author": "Habeeb Kareem",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/olaide-hok/weather-app.git/issues"
+    },
+    "homepage": "https://github.com/olaide-hok/weather-app.git#readme",
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "eslint",
+        "test": "vitest"
+    },
+    "dependencies": {
+        "@testing-library/jest-dom": "^6.8.0",
+        "@testing-library/react": "^16.3.0",
+        "clsx": "^2.1.1",
+        "react": "19.1.0",
+        "react-dom": "19.1.0",
+        "next": "15.5.2",
+        "tailwind-merge": "^3.3.1"
+    },
+    "devDependencies": {
+        "typescript": "^5",
+        "@testing-library/dom": "^10.4.1",
+        "@types/node": "^20",
+        "@types/react": "^19",
+        "@types/react-dom": "^19",
+        "@tailwindcss/postcss": "^4",
+        "jsdom": "^26.1.0",
+        "prettier-plugin-tailwindcss": "^0.6.14",
+        "tailwindcss": "^4",
+        "eslint": "^9",
+        "eslint-config-next": "15.5.2",
+        "@eslint/eslintrc": "^3",
+        "vite-tsconfig-paths": "^5.1.4",
+        "vitest": "^3.2.4"
+    }
+}
