@@ -1,1 +1,78 @@
 @import "tailwindcss";
+
+:root {
+  /* colors */
+  --clr-white: hsl(0, 0%, 100%);
+  --clr-black: hsl(0, 0%, 0%);
+
+  --clr-neutral-900: hsl(243, 96%, 9%);
+  --clr-neutral-800: hsl(243, 27%, 20%);
+  --clr-neutral-700: hsl(243, 23%, 24%);
+  --clr-neutral-600: hsl(243, 23%, 30%);
+  --clr-neutral-300: hsl(240, 6%, 70%);
+  --clr-neutral-200: hsl(250, 6%, 84%);
+  --clr-neutral-0: hsl(0, 0%, 100%);
+
+  --clr-orange-500: hsl(28, 100%, 52%);
+
+  --clr-blue-500: hsl(233, 67%, 56%);
+  --clr-blue-700: hsl(248, 70%, 36%);
+
+  /* Typography */
+  --font-bricolage-grotesque: "Bricolage Grotesque", sans-serif;
+  --font-dm-sans: "DM Sans", sans-serif;
+
+  --fs-96: 6rem;
+  --fs-52: 3.5rem;
+  --fs-32: 2rem;
+  --fs-28: 1.75rem;
+  --fs-24: 1.5rem;
+  --fs-20: 1.25rem;
+  --fs-18: 1.125rem;
+  --fs-16: 1rem;
+  --fs-14: 0.875rem;
+
+  /* Line Height */
+  --lh-120: 120%;
+  --lh-100: 100%;
+
+  /* Letter Spacing */
+  --ls-2n: -0.125rem;
+
+  /* Spacing */
+  --sp-025: 0.125rem;
+  --sp-050: 0.25rem;
+  --sp-075: 0.375rem;
+  --sp-100: 0.5rem;
+  --sp-125: 0.625rem;
+  --sp-150: 0.75rem;
+  --sp-200: 1rem;
+  --sp-250: 1.25rem;
+  --sp-300: 1.5rem;
+  --sp-400: 2rem;
+  --sp-500: 2.5rem;
+  --sp-600: 3rem;
+  --sp-800: 4rem;
+  --sp-1000: 5rem;
+  --sp-1200: 6rem;
+  --sp-1400: 7rem;
+  --sp-1600: 8rem;
+  --sp-1800: 8.75rem;
+
+  /* radius */
+  --radius-4: 0.25rem;
+  --radius-6: 0.375rem;
+  --radius-8: 0.5rem;
+  --radius-10: 0.625rem;
+  --radius-12: 0.75rem;
+  --radius-16: 1rem;
+  --radius-20: 1.25rem;
+  --radius-24: 1.5rem;
+  --radius-full: 62.4375rem;
+}
+
+body {
+  background: var(--clr-neutral-900);
+  color: var(--clr-neutral-0);
+  font-family: var(--font-dm-sans);
+}
