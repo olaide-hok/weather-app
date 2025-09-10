@@ -5,31 +5,33 @@ import "./globals.css";
 const bricolageGrotesque = localFont({
   src: [
     {
-      path: "./fonts/Bricolage_Grotesque/BricolageGrotesque-VariableFont_opsz_wdth_wght.ttf",
+      path: "../public/fonts/Bricolage_Grotesque/BricolageGrotesque-VariableFont_opsz_wdth_wght.ttf",
       weight: "400",
       style: "normal",
     },
     {
-      path: "./fonts/Bricolage_Grotesque/static/BricolageGrotesque-Bold.ttf",
+      path: "../public/fonts/Bricolage_Grotesque/static/BricolageGrotesque-Bold.ttf",
       weight: "700",
       style: "normal",
     },
   ],
+  variable: "--font-bricolage-grotesque",
 });
 
 const dmSans = localFont({
   src: [
     {
-      path: "./fonts/DM_Sans/DMSans-Italic-VariableFont_opsz_wght.ttf",
+      path: "../public/fonts/DM_Sans/DMSans-Italic-VariableFont_opsz_wght.ttf",
       weight: "400",
       style: "italic",
     },
     {
-      path: "./fonts/DM_Sans/DMSans-VariableFont_opsz_wght.ttf",
+      path: "../public/fonts/DM_Sans/DMSans-VariableFont_opsz_wght.ttf",
       weight: "400",
       style: "normal",
     },
   ],
+  variable: "--font-dm-sans",
 });
 
 export const metadata: Metadata = {
