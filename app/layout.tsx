@@ -48,7 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={` ${bricolageGrotesque.className} ${dmSans.className} antialiased`}
+        className={`${bricolageGrotesque.variable} ${dmSans.variable} antialiased`}
       >
         {children}
       </body>
