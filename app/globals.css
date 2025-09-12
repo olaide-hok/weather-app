@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@theme inline {
+  --font-bricolage-grotesque: var(--font-bricolage-grotesque);
+  --font-dm-sans: var(--font-dm-sans);
+}
+
 :root {
   /* colors */
   --clr-white: hsl(0, 0%, 100%);
@@ -75,4 +80,23 @@ body {
   background: var(--clr-neutral-900);
   color: var(--clr-neutral-0);
   font-family: var(--font-dm-sans);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  position: relative;
+}
+
+.bg_today {
+  background-image: url("/images/bg-today-small.svg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 17.875rem;
+  width: 100%;
+}
+
+@media screen and (min-width: 48rem) {
+  .bg_today {
+    background-image: url("/images/bg-today-large.svg");
+  }
 }
