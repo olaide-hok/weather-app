@@ -70,7 +70,7 @@ const UnitsDropdown = () => {
     <div className="flex flex-col rounded-(--radius-12) border border-(--clr-neutral-700) bg-(--clr-neutral-800) px-(--sp-100) py-(--sp-075) shadow-[0px_8px_16px_0px_rgba(2,1,44,0.32)] lg:w-[13.375rem]">
       <button
         type="button"
-        className="cursor-pointer rounded-(--radius-8) px-(--sp-100) py-(--sp-125) text-left text-(length:--fs-16) leading-(--lh-120) font-(familiy-name:--font-dm-sans) text-(--clr-neutral-0) capitalize"
+        className="cursor-pointer rounded-(--radius-8) px-(--sp-100) py-(--sp-125) text-left text-(length:--fs-16) leading-(--lh-120) font-(familiy-name:--font-dm-sans) text-(--clr-neutral-0) capitalize hover:bg-(--clr-neutral-700)"
         onClick={toggleUnit}
       >
         Switch to {siUnit}
