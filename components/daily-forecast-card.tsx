@@ -1,15 +1,17 @@
 import Image from "next/image";
+import { Skeleton } from "./skeleton";
 
 interface DailyForecastCardProps {
   day: string;
   desc: string;
   iconSrc: string;
   values: string[];
+  loading: boolean;
 }
 
 /**
  * A component to display a daily forecast card.
- * It takes in a day, description, icon source, and values.
+ * It takes in a day, description, icon source, loading, and values.
  * It displays the day, icon, and forecast range.
  */
 const DailyForecastCard = ({
@@ -17,7 +19,14 @@ const DailyForecastCard = ({
   desc,
   iconSrc,
   values,
+  loading,
 }: DailyForecastCardProps) => {
+  if (loading) {
+    return (
+      <Skeleton className="h-[10.3125rem] w-full rounded-(--radius-12) bg-(--clr-neutral-800)" />
+    );
+  }
+
   return (
     <div className="flex w-[6.47875rem] flex-col items-center gap-y-(--sp-200) rounded-(--radius-12) border border-(--clr-neutral-600) bg-(--clr-neutral-800) px-(--sp-125) py-(--sp-200) md:w-[5.57143rem] xl:w-[6.28571rem]">
       {/* day */}
