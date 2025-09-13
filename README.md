@@ -40,8 +40,8 @@ Users should be able to:
   </tr>
   <tr>
     <td><img src="./weather-app-desktop.png" alt="Desktop version"></td>
-    <td><img src="./waether-app-form-tablet.png" alt="Mobile version"></td>
-    <td><img src="./waether-app-form-mobile.png" alt="Mobile version"></td>
+    <td><img src="./weather-app-tablet.png" alt="Tablet version"></td>
+    <td><img src="./weather-app-mobile.png" alt="Mobile version"></td>
   </tr>
 </table>
 
