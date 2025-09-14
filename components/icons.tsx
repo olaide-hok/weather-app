@@ -109,6 +109,7 @@ export const Icons = {
       height="16"
       fill="none"
       viewBox="0 0 16 16"
+      className="animate-spin"
     >
       <path
         fill="#fff"
