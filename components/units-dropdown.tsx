@@ -2,60 +2,7 @@
 
 import { useState } from "react";
 import { Icons } from "./icons";
-
-const temp = [
-  {
-    name: "Celsius",
-    symbol: "(°C)",
-    type: "metric",
-  },
-  {
-    name: "Fahrenheit",
-    symbol: "(°F)",
-    type: "imperial",
-  },
-];
-
-const windSpeed = [
-  {
-    name: "km/h",
-    symbol: "",
-    type: "metric",
-  },
-  {
-    name: "mph",
-    symbol: "",
-    type: "imperial",
-  },
-];
-
-const precipitation = [
-  {
-    name: "Millimeters",
-    symbol: "mm",
-    type: "metric",
-  },
-  {
-    name: "Inches",
-    symbol: "(in)",
-    type: "imperial",
-  },
-];
-
-const units = [
-  {
-    title: "Temperature",
-    options: temp,
-  },
-  {
-    title: "Wind Speed",
-    options: windSpeed,
-  },
-  {
-    title: "Precipitation",
-    options: precipitation,
-  },
-];
+import { units } from "@/data";
 
 type SIUnits = "imperial" | "metric";
 
