@@ -1,14 +1,6 @@
 "use client";
 
-const days = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-];
+import { days } from "@/data";
 
 interface DaysDropdownProps {
   selectedDay: string;
