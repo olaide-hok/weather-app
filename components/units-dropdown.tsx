@@ -1,17 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { Icons } from "./icons";
 import { units } from "@/data";
-
-type SIUnits = "imperial" | "metric";
+import { useWeatherStore } from "@/store/weatherStore";
 
 const UnitsDropdown = () => {
-  const [siUnit, setSiUnit] = useState<SIUnits>("imperial");
-
-  const toggleUnit = () => {
-    setSiUnit((prev) => (prev === "metric" ? "imperial" : "metric"));
-  };
+  const { unitSI, toggleUnit } = useWeatherStore();
 
   return (
     <div className="flex flex-col rounded-(--radius-12) border border-(--clr-neutral-700) bg-(--clr-neutral-800) px-(--sp-100) py-(--sp-075) shadow-[0px_8px_16px_0px_rgba(2,1,44,0.32)] lg:w-[13.375rem]">
@@ -20,7 +14,7 @@ const UnitsDropdown = () => {
         className="cursor-pointer rounded-(--radius-8) px-(--sp-100) py-(--sp-125) text-left text-(length:--fs-16) leading-(--lh-120) font-(familiy-name:--font-dm-sans) text-(--clr-neutral-0) capitalize hover:bg-(--clr-neutral-700)"
         onClick={toggleUnit}
       >
-        Switch to {siUnit}
+        Switch to {unitSI === "metric" ? "imperial" : "metric"}
       </button>
 
       {/* units */}
@@ -37,14 +31,14 @@ const UnitsDropdown = () => {
               {unit.options.map((item, index) => (
                 <div
                   key={index}
-                  className={` ${item.type !== siUnit ? "rounded-(--radius-8) bg-(--clr-neutral-700)" : ""} flex w-full items-center justify-between gap-x-(--sp-125) px-(--sp-100) py-(--sp-125)`}
+                  className={` ${item.type === unitSI ? "rounded-(--radius-8) bg-(--clr-neutral-700)" : ""} flex w-full items-center justify-between gap-x-(--sp-125) px-(--sp-100) py-(--sp-125)`}
                 >
                   <span
                     className={`text-(length:--fs-16) leading-(--lh-120) font-(familiy-name:--font-dm-sans) text-(--clr-neutral-0)`}
                   >
                     {item.name} {item.symbol}
                   </span>
-                  {item.type !== siUnit && <Icons.checkmark />}
+                  {item.type === unitSI && <Icons.checkmark />}
                 </div>
               ))}
             </div>
