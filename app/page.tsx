@@ -1,3 +1,5 @@
+"use client";
+
 import APIError from "@/components/api-error";
 import DailyForecastCard from "@/components/daily-forecast-card";
 import Header from "@/components/header";
@@ -6,13 +8,29 @@ import HourlyForecastDropdown from "@/components/hourly-forecast-dropdown";
 import HourlyForecastTile from "@/components/hourly-forecast-tile";
 import SearchBar from "@/components/search-bar";
 import THWPContainer from "@/components/thwp-container";
-import { dailyForecastData, hourlyForecastData, thwpData } from "@/data";
+import { dailyForecastData, hourlyForecastData } from "@/data";
+import { useWeatherStore } from "@/store/weatherStore";
 import Image from "next/image";
+import { useEffect } from "react";
 
 export default function Home() {
-  const loading = false;
+  const fetchCurrentWeatherData = useWeatherStore(
+    (state) => state.fetchCurrentWeatherData,
+  );
+
+  const {
+    loading,
+    unitSI: unit,
+    cityName,
+    currentWeatherData,
+  } = useWeatherStore();
+
   const apiError = false;
   const noResultFound = false;
+
+  useEffect(() => {
+    fetchCurrentWeatherData();
+  }, [fetchCurrentWeatherData]);
 
   return (
     <main className="flex w-[23.4375rem] flex-col items-center px-(--sp-200) pt-(--sp-200) pb-(--sp-600) md:w-full md:px-(--sp-300) md:pt-(--sp-300) md:pb-(--sp-1000) lg:px-(--sp-1400) lg:py-(--sp-600) 2xl:max-w-[90rem]">
@@ -47,10 +65,10 @@ export default function Home() {
                     {/* city name and date */}
                     <div className="flex w-full flex-col items-center gap-y-(--sp-150) md:items-start">
                       <h2 className="text-(length:--fs-28) leading-(--lh-120) font-bold text-(--clr-neutral-0)">
-                        Berlin, Germany
+                        {cityName}
                       </h2>
                       <p className="text-(length:--fs-18) leading-(--lh-120) font-medium text-(--clr-neutral-0)/80">
-                        Tuesday, Aug 4, 2025
+                        {currentWeatherData?.time}
                       </p>
                     </div>
                     {/* cloud and temp value */}
@@ -62,22 +80,51 @@ export default function Home() {
                         width={120}
                       />
                       <p className="text-[6rem] font-semibold tracking-[-0.12rem] text-(--clr-neutral-0) italic">
-                        20°
+                        {currentWeatherData?.apparent_temperature.toFixed(0)}°
                       </p>
                     </div>
                   </div>
                 )}
-                {/* thwp containers */}
-                <div className="grid grid-cols-2 gap-(--sp-200) md:grid-cols-4">
-                  {thwpData.map((item, index) => (
-                    <THWPContainer
-                      key={index}
-                      title={item.title}
-                      value={item.value}
-                      loading={loading}
-                    />
-                  ))}
-                </div>
+                {currentWeatherData && (
+                  <>
+                    {/* thwp containers */}
+                    <div className="grid grid-cols-2 gap-(--sp-200) md:grid-cols-4">
+                      {/* Feels Like */}
+                      <THWPContainer
+                        title="Feels Like"
+                        value={`${currentWeatherData?.temperature_2m.toFixed(0)}°`}
+                        loading={loading}
+                        unit=""
+                      />
+
+                      {/* Humidity */}
+                      <THWPContainer
+                        title="Humidity"
+                        value={currentWeatherData?.relative_humidity_2m.toFixed(
+                          0,
+                        )}
+                        loading={loading}
+                        unit="%"
+                      />
+
+                      {/* Wind */}
+                      <THWPContainer
+                        title="Wind"
+                        value={currentWeatherData?.wind_speed_10m.toFixed(0)}
+                        loading={loading}
+                        unit={unit === "metric" ? "km/h" : "mph"}
+                      />
+
+                      {/* Precipitation */}
+                      <THWPContainer
+                        title="Precipitation"
+                        value={currentWeatherData?.precipitation.toFixed(0)}
+                        loading={loading}
+                        unit={unit === "metric" ? "mm" : "in"}
+                      />
+                    </div>
+                  </>
+                )}
                 {/* daily forecast */}
                 <div className="flex flex-col gap-y-(--sp-250)">
                   <h3 className="text-(length:--fs-18) leading-(--lh-120) font-semibold text-(--clr-neutral-0)">
