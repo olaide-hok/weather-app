@@ -4,7 +4,11 @@ import { Icons } from "./icons";
 import { units } from "@/data";
 import { useWeatherStore } from "@/store/weatherStore";
 
-const UnitsDropdown = () => {
+interface UnitsDropdownProps {
+  closeDropdown: () => void;
+}
+
+const UnitsDropdown = ({ closeDropdown }: UnitsDropdownProps) => {
   const { unitSI, toggleUnit } = useWeatherStore();
 
   return (
@@ -12,7 +16,10 @@ const UnitsDropdown = () => {
       <button
         type="button"
         className="cursor-pointer rounded-(--radius-8) px-(--sp-100) py-(--sp-125) text-left text-(length:--fs-16) leading-(--lh-120) font-(familiy-name:--font-dm-sans) text-(--clr-neutral-0) capitalize hover:bg-(--clr-neutral-700)"
-        onClick={toggleUnit}
+        onClick={() => {
+          toggleUnit();
+          closeDropdown();
+        }}
       >
         Switch to {unitSI === "metric" ? "imperial" : "metric"}
       </button>
