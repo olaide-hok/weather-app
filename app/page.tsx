@@ -80,7 +80,7 @@ export default function Home() {
                         width={120}
                       />
                       <p className="text-[6rem] font-semibold tracking-[-0.12rem] text-(--clr-neutral-0) italic">
-                        {currentWeatherData?.apparent_temperature.toFixed(0)}°
+                        {currentWeatherData?.temperature_2m.toFixed(0)}°
                       </p>
                     </div>
                   </div>
@@ -92,7 +92,7 @@ export default function Home() {
                       {/* Feels Like */}
                       <THWPContainer
                         title="Feels Like"
-                        value={`${currentWeatherData?.temperature_2m.toFixed(0)}°`}
+                        value={`${currentWeatherData?.apparent_temperature.toFixed(0)}°`}
                         loading={loading}
                         unit=""
                       />
