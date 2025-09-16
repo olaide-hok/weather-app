@@ -1,42 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
-import useSWR from "swr";
+
 import { fetchWeatherApi } from "openmeteo";
-import { DailyForecast } from "@/store/weatherStore";
+import { DailyForecast, HourlyForecastDataPerDay } from "@/store/weatherStore";
 
-// Debounce hook to prevent unnecessary API calls.
-export function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => setDebouncedValue(value), delay);
-    return () => clearTimeout(handler);
-  }, [value, delay]);
-
-  return debouncedValue;
-}
-
-export const fetcher = (url: string) => fetch(url).then((res) => res.json());
-export const geocodingAPIUrl = "https://geocoding-api.open-meteo.com/v1/search";
-export const weatherAPIUrl = "https://api.open-meteo.com/v1/forecast";
-
-// Fetch coordinates of a place using OpenMeteo Geocoding API.
-export function useGetCoordinates(place: string) {
-  const { data, error, isLoading } = useSWR(
-    place
-      ? `${geocodingAPIUrl}?name=${encodeURIComponent(
-          place,
-        )}&count=10&language=en&format=json`
-      : null,
-    fetcher,
-  );
-
-  return {
-    geocodeData: data,
-    isLoading,
-    isError: error,
-  };
-}
+const weatherAPIUrl = "https://api.open-meteo.com/v1/forecast";
 
 type FetchedWeatherData = {
   lat: number;
@@ -249,4 +216,128 @@ export async function fetchDailyWeatherData(
   // Format data for daily forecast card
   const dailyForecastData = formatDailyForecast(weatherData.daily);
   return dailyForecastData;
+}
+
+type HourlyForecastWithDay = {
+  time: string;
+  description: string;
+  iconSrc: string;
+  temp: string;
+  day: string;
+};
+
+// format Open Meteo API response hourly data into per-hour structure.
+export function formatHourlyForecast(
+  apiResponse: any,
+): HourlyForecastWithDay[] {
+  const { time, weather_code, temperature_2m } = apiResponse;
+
+  const hourlyForecastData = time.map((time: Date, index: number) => {
+    const code = weather_code[index];
+    const temp = temperature_2m[index];
+    const { desc, iconSrc } = weatherCodeMap[code];
+
+    return {
+      time: new Intl.DateTimeFormat("en-US", {
+        hour: "numeric",
+        hour12: true,
+      }).format(time), // e.g., "3 PM"
+      description: desc,
+      iconSrc,
+      temp: `${Math.round(temp)}°`,
+      day: new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(time), // "Monday"
+    };
+  });
+
+  return hourlyForecastData;
+}
+
+// group data by day of the week
+function groupHourlyForecastByDay(
+  data: HourlyForecastWithDay[],
+): HourlyForecastDataPerDay[] {
+  const hourlyForecastDataPerDay = data.reduce((acc, curr) => {
+    const existing = acc.find((d) => d.day === curr.day);
+    if (existing) {
+      existing.data.push({
+        time: curr.time,
+        description: curr.description,
+        iconSrc: curr.iconSrc,
+        temp: curr.temp,
+      });
+    } else {
+      acc.push({
+        day: curr.day,
+        data: [
+          {
+            time: curr.time,
+            description: curr.description,
+            iconSrc: curr.iconSrc,
+            temp: curr.temp,
+          },
+        ],
+      });
+    }
+    return acc;
+  }, [] as HourlyForecastDataPerDay[]);
+
+  return hourlyForecastDataPerDay;
+}
+
+// fetch Hourly Forecast Weather Data
+export async function fetchHourlyWeatherData(
+  { lat, long }: FetchedWeatherData,
+  unit: string,
+) {
+  let params;
+  if (unit !== "metric") {
+    params = {
+      latitude: lat,
+      longitude: long,
+      hourly: ["weather_code", "temperature_2m"],
+      wind_speed_unit: "mph",
+      temperature_unit: "fahrenheit",
+      precipitation_unit: "inch",
+    };
+  } else {
+    params = {
+      latitude: lat,
+      longitude: long,
+      hourly: ["weather_code", "temperature_2m"],
+    };
+  }
+  const responses = await fetchWeatherApi(weatherAPIUrl, params);
+
+  // Process first location.
+  const response = responses[0];
+
+  // Attributes for timezone
+  const utcOffsetSeconds = response.utcOffsetSeconds();
+  // Attributes for hourly forecast
+  const hourly = response.hourly()!;
+
+  // Note: The order of weather variables in the URL query and the indices below need to match!
+  const weatherData = {
+    hourly: {
+      time: [
+        ...Array(
+          (Number(hourly.timeEnd()) - Number(hourly.time())) /
+            hourly.interval(),
+        ),
+      ].map(
+        (_, i) =>
+          new Date(
+            (Number(hourly.time()) + i * hourly.interval() + utcOffsetSeconds) *
+              1000,
+          ),
+      ),
+      weather_code: hourly.variables(0)!.valuesArray(),
+      temperature_2m: hourly.variables(1)!.valuesArray(),
+    },
+  };
+
+  // Format data for hourly forecast
+  const hourlyForecastData = formatHourlyForecast(weatherData.hourly);
+  const hourlyForecastDataPerDay = groupHourlyForecastByDay(hourlyForecastData);
+  return hourlyForecastDataPerDay;
 }
