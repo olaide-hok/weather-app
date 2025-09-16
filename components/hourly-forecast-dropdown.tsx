@@ -3,15 +3,25 @@
 import { useState } from "react";
 import { Icons } from "./icons";
 import DaysDropdown from "./days-dropdown";
+import { HourlyForecastDataPerDay } from "@/store/weatherStore";
+
+interface HourlyForecastDropdownProps {
+  selectedDay: string;
+  setSelectedDay: (day: string) => void;
+  hourlyForecastDataPerDay: HourlyForecastDataPerDay[] | null;
+}
 
 /**
  * A dropdown component to select a day of the week for the hourly forecast.
  *
  * @returns A JSX element displaying a dropdown to select a day of the week.
  */
-const HourlyForecastDropdown = () => {
+const HourlyForecastDropdown = ({
+  selectedDay,
+  setSelectedDay,
+  hourlyForecastDataPerDay,
+}: HourlyForecastDropdownProps) => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedDay, setSelectedDay] = useState("Monday");
 
   const handleDayClick = (day: string) => {
     setSelectedDay(day);
@@ -33,7 +43,11 @@ const HourlyForecastDropdown = () => {
       <div
         className={` ${showDropdown ? "block" : "hidden"} absolute top-[3rem] right-0 z-10`}
       >
-        <DaysDropdown selectedDay={selectedDay} selectDay={handleDayClick} />
+        <DaysDropdown
+          selectedDay={selectedDay}
+          selectDay={handleDayClick}
+          days={hourlyForecastDataPerDay}
+        />
       </div>
     </div>
   );
