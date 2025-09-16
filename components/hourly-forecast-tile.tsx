@@ -30,7 +30,7 @@ const HourlyForecastTile = ({
   loading,
 }: HourlyForecastTileProps) => {
   if (loading) {
-    return <Skeleton className="h-full w-full bg-(--clr-neutral-700)" />;
+    return <Skeleton className="h-[3.75rem] w-full bg-(--clr-neutral-700)" />;
   }
 
   return (
