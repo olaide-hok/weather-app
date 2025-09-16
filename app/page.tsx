@@ -8,7 +8,7 @@ import HourlyForecastDropdown from "@/components/hourly-forecast-dropdown";
 import HourlyForecastTile from "@/components/hourly-forecast-tile";
 import SearchBar from "@/components/search-bar";
 import THWPContainer from "@/components/thwp-container";
-import { dailyForecastData, hourlyForecastData } from "@/data";
+import { hourlyForecastData } from "@/data";
 import { useWeatherStore } from "@/store/weatherStore";
 import Image from "next/image";
 import { useEffect } from "react";
@@ -17,20 +17,28 @@ export default function Home() {
   const fetchCurrentWeatherData = useWeatherStore(
     (state) => state.fetchCurrentWeatherData,
   );
+  const fetchDailyForecast = useWeatherStore(
+    (state) => state.fetchDailyForecastData,
+  );
 
   const {
     loading,
     unitSI: unit,
     cityName,
     currentWeatherData,
+    dailyForecastData,
+    error: apiError,
   } = useWeatherStore();
 
-  const apiError = false;
   const noResultFound = false;
 
   useEffect(() => {
     fetchCurrentWeatherData();
   }, [fetchCurrentWeatherData]);
+
+  useEffect(() => {
+    fetchDailyForecast();
+  }, [fetchDailyForecast]);
 
   return (
     <main className="flex w-[23.4375rem] flex-col items-center px-(--sp-200) pt-(--sp-200) pb-(--sp-600) md:w-full md:px-(--sp-300) md:pt-(--sp-300) md:pb-(--sp-1000) lg:px-(--sp-1400) lg:py-(--sp-600) 2xl:max-w-[90rem]">
@@ -131,16 +139,17 @@ export default function Home() {
                     Daily forecast
                   </h3>
                   <div className="grid grid-cols-3 gap-(--sp-200) md:grid-cols-7">
-                    {dailyForecastData.map((item, index) => (
-                      <DailyForecastCard
-                        key={index}
-                        day={item.day}
-                        desc={item.desc}
-                        iconSrc={item.iconSrc}
-                        values={item.values}
-                        loading={loading}
-                      />
-                    ))}
+                    {dailyForecastData &&
+                      dailyForecastData.map((item, index) => (
+                        <DailyForecastCard
+                          key={index}
+                          day={item.day}
+                          desc={item.desc}
+                          iconSrc={item.iconSrc}
+                          values={item.values}
+                          loading={loading}
+                        />
+                      ))}
                   </div>
                 </div>
               </div>
