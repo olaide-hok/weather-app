@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { fetchCurrentWeatherData } from "@/lib/utils";
+import { fetchCurrentWeatherData, fetchDailyWeatherData } from "@/lib/utils";
 
 // Berlin, Germany coordinates for initial state
 const berlinGermanyCoordinates = {
@@ -16,17 +16,27 @@ interface CurrentWeatherData {
   precipitation: number;
 }
 
+export type DailyForecast = {
+  day: string;
+  desc: string;
+  iconSrc: string;
+  values: string[];
+};
+
 interface WeatherStoreState {
   unitSI: "metric" | "imperial";
   toggleUnit: () => void;
   cityName: string;
   currentWeatherData: CurrentWeatherData | null;
+  dailyForecastData: DailyForecast[] | null;
   lat: number;
   long: number;
   loading: boolean;
+  error: boolean;
   setCityName: (name: string) => void;
   setCoordinates: (lat: number, long: number) => void;
   fetchCurrentWeatherData: () => Promise<void>;
+  fetchDailyForecastData: () => Promise<void>;
 }
 
 export const useWeatherStore = create<WeatherStoreState>((set, get) => ({
@@ -38,12 +48,15 @@ export const useWeatherStore = create<WeatherStoreState>((set, get) => ({
       unitSI: newUnit,
     });
     await get().fetchCurrentWeatherData();
+    await get().fetchDailyForecastData();
   },
   cityName: "Berlin, Germany",
   currentWeatherData: null,
+  dailyForecastData: null,
   lat: berlinGermanyCoordinates.lat,
   long: berlinGermanyCoordinates.long,
   loading: false,
+  error: false,
   setCityName: (name) =>
     set({
       cityName: name,
@@ -59,10 +72,22 @@ export const useWeatherStore = create<WeatherStoreState>((set, get) => ({
 
     try {
       const data = await fetchCurrentWeatherData({ lat, long }, unitSI);
-      set({ currentWeatherData: data, loading: false });
+      set({ currentWeatherData: data, loading: false, error: false });
     } catch (error) {
       console.error("Error fetching current weather data:", error);
-      set({ currentWeatherData: null, loading: false });
+      set({ currentWeatherData: null, loading: false, error: true });
+    }
+  },
+  fetchDailyForecastData: async () => {
+    const { lat, long, unitSI } = get();
+    set({ loading: true });
+
+    try {
+      const data = await fetchDailyWeatherData({ lat, long }, unitSI);
+      set({ dailyForecastData: data, loading: false, error: false });
+    } catch (error) {
+      console.error("Error fetching daily forecast weather data:", error);
+      set({ dailyForecastData: null, loading: false, error: true });
     }
   },
 }));
