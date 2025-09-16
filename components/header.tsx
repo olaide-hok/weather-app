@@ -56,7 +56,7 @@ const Header = () => {
         <div
           className={` ${showDropdown ? "block" : "hidden"} absolute top-[3rem] right-0 z-10`}
         >
-          <UnitsDropdown />
+          <UnitsDropdown closeDropdown={() => setShowDropdown(false)} />
         </div>
       </div>
     </header>
