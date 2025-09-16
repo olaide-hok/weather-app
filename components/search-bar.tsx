@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { Icons } from "./icons";
-import { useDebounce, useGetCoordinates } from "@/lib/utils";
 import SearchDropdown from "./search-dropdown";
 import { useWeatherStore } from "@/store/weatherStore";
+import useDebounce from "@/hooks/useDebounce";
+import useGetCoordinates from "@/hooks/useGetCoordinates";
 
 type Suggestion = {
   name: string;
@@ -18,6 +19,7 @@ const SearchBar = () => {
     setCityName,
     fetchCurrentWeatherData,
     fetchDailyForecastData,
+    fetchHourlyForecastData,
     setCoordinates,
   } = useWeatherStore();
   const [searchText, setSearchText] = useState(""); // user input
@@ -55,6 +57,7 @@ const SearchBar = () => {
     setCoordinates(suggestion.latitude, suggestion.longitude);
     fetchCurrentWeatherData();
     fetchDailyForecastData();
+    fetchHourlyForecastData();
     setSearchText("");
   };
 
