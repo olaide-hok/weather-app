@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Icons } from "./icons";
-import { fetchWeatherData, useDebounce, useGetCoordinates } from "@/lib/utils";
+import { useDebounce, useGetCoordinates } from "@/lib/utils";
 import SearchDropdown from "./search-dropdown";
 import { useWeatherStore } from "@/store/weatherStore";
 
@@ -13,28 +13,21 @@ type Suggestion = {
   country: string;
 };
 
-type SearchParams = {
-  lat: number;
-  long: number;
-};
-
 const SearchBar = () => {
-  const { unitSI: unit } = useWeatherStore(); // unit
+  const { setCityName, fetchCurrentWeatherData, setCoordinates } =
+    useWeatherStore();
   const [searchText, setSearchText] = useState(""); // user input
   const [suppressSuggestions, setSuppressSuggestions] = useState(false); // prevent dropdown from reappearing
-  const [searchWeatherParams, setSearchWeatherParams] =
-    useState<SearchParams | null>(null); // latitude and longitude
   const debouncedSearchText = useDebounce(searchText, 500); // debounce search text
   const { geocodeData, isLoading } = useGetCoordinates(debouncedSearchText); // fetch geocode data (i.e latitude and longitude).
   const [suggestions, setSuggestions] = useState([]); // suggestions from geocode data to populate dropdown.
+  const [selectedSuggestion, setSelectedSuggestion] =
+    useState<Suggestion | null>(null);
 
   const handleSelect = (suggestion: Suggestion) => {
-    setSearchText(suggestion.name); // autofill input
+    setSearchText(suggestion.name + " " + suggestion.country); // autofill input
     setSuggestions([]); // hide dropdown
-    setSearchWeatherParams({
-      lat: suggestion.latitude,
-      long: suggestion.longitude,
-    });
+    setSelectedSuggestion(suggestion);
     setSuppressSuggestions(true); // prevent dropdown from reappearing
   };
 
@@ -52,11 +45,13 @@ const SearchBar = () => {
     }
   }, [geocodeData, searchText]);
 
-  const searchWeatherInfo = async () => {
-    if (searchWeatherParams) {
-      const res = await fetchWeatherData(searchWeatherParams, unit);
-      // console.log(`res for search ${searchText}`, JSON.stringify(res, null, 2));
-    }
+  const searchWeatherInfo = async (suggestion: Suggestion) => {
+    // console.log("selected suggestion", searchText);
+    setCityName(suggestion.name + " " + suggestion.country);
+    // current forecast
+    setCoordinates(suggestion.latitude, suggestion.longitude);
+    fetchCurrentWeatherData();
+    setSearchText("");
   };
 
   return (
@@ -81,9 +76,13 @@ const SearchBar = () => {
         {/* search button */}
         <button
           type="button"
-          className={`${searchWeatherParams === null || isLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"} font-dm-sans rounded-(--radius-12) bg-(--clr-blue-500) px-(--sp-300) py-(--sp-200) text-(length:--fs-20) leading-(--lh-120) font-medium text-(--clr-neutral-0)`}
-          onClick={() => searchWeatherInfo()}
-          disabled={searchWeatherParams === null || isLoading}
+          className={`${selectedSuggestion === null || isLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"} font-dm-sans rounded-(--radius-12) bg-(--clr-blue-500) px-(--sp-300) py-(--sp-200) text-(length:--fs-20) leading-(--lh-120) font-medium text-(--clr-neutral-0)`}
+          onClick={() => {
+            if (selectedSuggestion !== null) {
+              searchWeatherInfo(selectedSuggestion);
+            }
+          }}
+          disabled={selectedSuggestion === null || isLoading}
         >
           Search
         </button>
