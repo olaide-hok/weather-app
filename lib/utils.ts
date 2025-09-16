@@ -10,49 +10,58 @@ type FetchedWeatherData = {
   long: number;
 };
 
+// build weather params
+function buildWeatherParams(
+  { lat, long }: FetchedWeatherData,
+  unit: string,
+  type: "current" | "daily" | "hourly",
+) {
+  const common = {
+    latitude: lat,
+    longitude: long,
+  };
+  // datasets for current, daily, and hourly
+  const datasets: Record<typeof type, string[]> = {
+    current: [
+      "precipitation",
+      "temperature_2m",
+      "wind_speed_10m",
+      "relative_humidity_2m",
+      "apparent_temperature",
+    ],
+    daily: ["weather_code", "temperature_2m_max", "temperature_2m_min"],
+    hourly: ["weather_code", "temperature_2m"],
+  };
+  // unit overrides
+  const unitOverrides =
+    unit !== "metric"
+      ? {
+          wind_speed_unit: "mph",
+          temperature_unit: "fahrenheit",
+          precipitation_unit: "inch",
+        }
+      : {};
+
+  return {
+    ...common,
+    [type]: datasets[type],
+    ...unitOverrides,
+  };
+}
+
 // Fetch current weather data using OpenMeteo API.
 export async function fetchCurrentWeatherData(
   { lat, long }: FetchedWeatherData,
   unit: string,
 ) {
-  let params;
-  if (unit !== "metric") {
-    params = {
-      latitude: lat,
-      longitude: long,
-      current: [
-        "precipitation",
-        "temperature_2m",
-        "wind_speed_10m",
-        "relative_humidity_2m",
-        "apparent_temperature",
-      ],
-      wind_speed_unit: "mph",
-      temperature_unit: "fahrenheit",
-      precipitation_unit: "inch",
-    };
-  } else {
-    params = {
-      latitude: lat,
-      longitude: long,
-      current: [
-        "precipitation",
-        "temperature_2m",
-        "wind_speed_10m",
-        "relative_humidity_2m",
-        "apparent_temperature",
-      ],
-    };
-  }
-
+  const params = buildWeatherParams({ lat, long }, unit, "current");
+  // Fetch data from Open Meteo API
   const responses = await fetchWeatherApi(weatherAPIUrl, params);
-
   // Process first location.
   const response = responses[0];
-
   // Attribute for timezone
   const utcOffsetSeconds = response.utcOffsetSeconds();
-
+  // Attributes for current
   const current = response.current()!;
 
   const date = new Date((Number(current.time()) + utcOffsetSeconds) * 1000);
@@ -169,24 +178,8 @@ export async function fetchDailyWeatherData(
   { lat, long }: FetchedWeatherData,
   unit: string,
 ) {
-  let params;
-  if (unit !== "metric") {
-    params = {
-      latitude: lat,
-      longitude: long,
-      daily: ["weather_code", "temperature_2m_max", "temperature_2m_min"],
-      wind_speed_unit: "mph",
-      temperature_unit: "fahrenheit",
-      precipitation_unit: "inch",
-    };
-  } else {
-    params = {
-      latitude: lat,
-      longitude: long,
-      daily: ["weather_code", "temperature_2m_max", "temperature_2m_min"],
-    };
-  }
-
+  const params = buildWeatherParams({ lat, long }, unit, "daily");
+  // Fetch data from Open Meteo API
   const responses = await fetchWeatherApi(weatherAPIUrl, params);
   // Process first location.
   const response = responses[0];
@@ -289,23 +282,8 @@ export async function fetchHourlyWeatherData(
   { lat, long }: FetchedWeatherData,
   unit: string,
 ) {
-  let params;
-  if (unit !== "metric") {
-    params = {
-      latitude: lat,
-      longitude: long,
-      hourly: ["weather_code", "temperature_2m"],
-      wind_speed_unit: "mph",
-      temperature_unit: "fahrenheit",
-      precipitation_unit: "inch",
-    };
-  } else {
-    params = {
-      latitude: lat,
-      longitude: long,
-      hourly: ["weather_code", "temperature_2m"],
-    };
-  }
+  const params = buildWeatherParams({ lat, long }, unit, "hourly");
+  // Fetch data from Open Meteo API
   const responses = await fetchWeatherApi(weatherAPIUrl, params);
 
   // Process first location.
