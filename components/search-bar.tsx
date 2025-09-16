@@ -14,8 +14,12 @@ type Suggestion = {
 };
 
 const SearchBar = () => {
-  const { setCityName, fetchCurrentWeatherData, setCoordinates } =
-    useWeatherStore();
+  const {
+    setCityName,
+    fetchCurrentWeatherData,
+    fetchDailyForecastData,
+    setCoordinates,
+  } = useWeatherStore();
   const [searchText, setSearchText] = useState(""); // user input
   const [suppressSuggestions, setSuppressSuggestions] = useState(false); // prevent dropdown from reappearing
   const debouncedSearchText = useDebounce(searchText, 500); // debounce search text
@@ -48,9 +52,9 @@ const SearchBar = () => {
   const searchWeatherInfo = async (suggestion: Suggestion) => {
     // console.log("selected suggestion", searchText);
     setCityName(suggestion.name + " " + suggestion.country);
-    // current forecast
     setCoordinates(suggestion.latitude, suggestion.longitude);
     fetchCurrentWeatherData();
+    fetchDailyForecastData();
     setSearchText("");
   };
 
