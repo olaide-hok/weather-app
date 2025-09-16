@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { fetchWeatherApi } from "openmeteo";
+import { DailyForecast } from "@/store/weatherStore";
 
 // Debounce hook to prevent unnecessary API calls.
 export function useDebounce<T>(value: T, delay: number): T {
@@ -109,13 +110,6 @@ export async function fetchCurrentWeatherData(
 
   return weatherData.current;
 }
-
-type DailyForecast = {
-  day: string;
-  desc: string;
-  iconSrc: string;
-  values: string[];
-};
 
 // map WMO weather codes to description + icons
 const weatherCodeMap: Record<number, { desc: string; iconSrc: string }> = {
