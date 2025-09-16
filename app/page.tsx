@@ -8,10 +8,10 @@ import HourlyForecastDropdown from "@/components/hourly-forecast-dropdown";
 import HourlyForecastTile from "@/components/hourly-forecast-tile";
 import SearchBar from "@/components/search-bar";
 import THWPContainer from "@/components/thwp-container";
-import { hourlyForecastData } from "@/data";
+import useSelectedHourlyData from "@/hooks/useSelectedHourlyData";
 import { useWeatherStore } from "@/store/weatherStore";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const fetchCurrentWeatherData = useWeatherStore(
@@ -20,6 +20,9 @@ export default function Home() {
   const fetchDailyForecast = useWeatherStore(
     (state) => state.fetchDailyForecastData,
   );
+  const fetchHourlyForecast = useWeatherStore(
+    (state) => state.fetchHourlyForecastData,
+  );
 
   const {
     loading,
@@ -27,6 +30,7 @@ export default function Home() {
     cityName,
     currentWeatherData,
     dailyForecastData,
+    hourlyForecastData,
     error: apiError,
   } = useWeatherStore();
 
@@ -39,6 +43,21 @@ export default function Home() {
   useEffect(() => {
     fetchDailyForecast();
   }, [fetchDailyForecast]);
+
+  useEffect(() => {
+    fetchHourlyForecast();
+  }, [fetchHourlyForecast]);
+
+  // get today's weekday name (e.g., "Tuesday")
+  const today = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
+    new Date(),
+  );
+
+  const [selectedDay, setSelectedDay] = useState(today);
+  const selectedData = useSelectedHourlyData(
+    hourlyForecastData ?? [],
+    selectedDay,
+  );
 
   return (
     <main className="flex w-[23.4375rem] flex-col items-center px-(--sp-200) pt-(--sp-200) pb-(--sp-600) md:w-full md:px-(--sp-300) md:pt-(--sp-300) md:pb-(--sp-1000) lg:px-(--sp-1400) lg:py-(--sp-600) 2xl:max-w-[90rem]">
@@ -159,20 +178,24 @@ export default function Home() {
                   <span className="text-(length:--fs-20) leading-(--lh-120) font-semibold text-(--clr-neutral-0)">
                     Hourly forecast
                   </span>
-
-                  <HourlyForecastDropdown />
+                  <HourlyForecastDropdown
+                    selectedDay={selectedDay}
+                    setSelectedDay={setSelectedDay}
+                    hourlyForecastDataPerDay={hourlyForecastData}
+                  />
                 </div>
                 {/* hourly forecast tiles */}
-                {hourlyForecastData.map((item, index) => (
-                  <HourlyForecastTile
-                    key={index}
-                    time={item.time}
-                    temp={item.temp}
-                    iconSrc={item.iconSrc}
-                    desc={item.description}
-                    loading={loading}
-                  />
-                ))}
+                {selectedData &&
+                  selectedData?.data?.map((item, index) => (
+                    <HourlyForecastTile
+                      key={index}
+                      time={item.time}
+                      temp={item.temp}
+                      iconSrc={item.iconSrc}
+                      desc={item.description}
+                      loading={loading}
+                    />
+                  ))}
               </div>
             </section>
           )}
