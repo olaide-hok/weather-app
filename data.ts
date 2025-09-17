@@ -1,19 +1,19 @@
 export const thwpData = [
   {
     title: "Feels Like",
-    value: "18°",
+    value: "-",
   },
   {
     title: "Humidity",
-    value: "46%",
+    value: "-",
   },
   {
     title: "Wind",
-    value: "14 km/h",
+    value: "-",
   },
   {
     title: "Precipitation",
-    value: "0 mm",
+    value: "-",
   },
 ];
 
