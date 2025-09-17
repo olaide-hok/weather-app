@@ -145,10 +145,10 @@ export default function Home() {
                         {/* Humidity */}
                         <THWPContainer
                           title="Humidity"
-                          value={currentWeatherData?.relative_humidity_2m.toFixed(
+                          value={`${currentWeatherData?.relative_humidity_2m.toFixed(
                             0,
-                          )}
-                          unit="%"
+                          )}%`}
+                          unit=""
                         />
 
                         {/* Wind */}
