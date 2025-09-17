@@ -1,6 +1,12 @@
+import { useWeatherStore } from "@/store/weatherStore";
 import { Icons } from "./icons";
 
 const APIError = () => {
+  const {
+    fetchCurrentWeatherData,
+    fetchDailyForecastData,
+    fetchHourlyForecastData,
+  } = useWeatherStore();
   return (
     <div className="mt-(--sp-800) flex flex-col items-center gap-y-(--sp-200) pt-(--sp-500)">
       {/* error icon */}
@@ -17,7 +23,12 @@ const APIError = () => {
 
       <button
         type="button"
-        className="flex gap-x-(--sp-125) rounded-(--radius-8) bg-[#262540] px-(--sp-300) py-(--sp-150)"
+        className="flex cursor-pointer gap-x-(--sp-125) rounded-(--radius-8) bg-[#262540] px-(--sp-300) py-(--sp-150)"
+        onClick={() => {
+          fetchCurrentWeatherData();
+          fetchDailyForecastData();
+          fetchHourlyForecastData();
+        }}
       >
         <Icons.retry />
         <span className="text-(length:--fs-16) leading-(--lh-120) font-medium text-(--clr-neutral-0)">
