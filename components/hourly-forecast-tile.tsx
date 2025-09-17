@@ -1,14 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { Skeleton } from "./skeleton";
 
 interface HourlyForecastTileProps {
   time: string;
   temp: string;
   iconSrc: string;
   desc: string;
-  loading: boolean;
 }
 
 /**
@@ -18,7 +16,6 @@ interface HourlyForecastTileProps {
  * @param {string} temp - The temperature at the given time.
  * @param {string} iconSrc - The URL of the weather icon.
  * @param {string} desc - A human-readable description of the weather condition.
- * @param {string} loading - A loading state.
  *
  * @returns {JSX.Element} A JSX element displaying the time, temperature, and weather icon.
  */
@@ -27,12 +24,7 @@ const HourlyForecastTile = ({
   temp,
   iconSrc,
   desc,
-  loading,
 }: HourlyForecastTileProps) => {
-  if (loading) {
-    return <Skeleton className="h-[3.75rem] w-full bg-(--clr-neutral-700)" />;
-  }
-
   return (
     <div className="flex w-full items-center justify-between rounded-(--radius-8) border border-(--clr-neutral-600) bg-(--clr-neutral-700) py-(--sp-125) pr-(--sp-200) pl-(--sp-150) font-(familiy-name:--font-dm-sans)">
       <div className="flex items-center gap-x-(--sp-100)">
