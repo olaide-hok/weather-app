@@ -126,41 +126,43 @@ export default function Home() {
                   // ) : (
                   <>
                     {/* thwp containers */}
-                    <div className="grid grid-cols-2 gap-(--sp-200) md:grid-cols-4">
-                      {/* Feels Like */}
-                      <THWPContainer
-                        title="Feels Like"
-                        value={`${currentWeatherData?.apparent_temperature.toFixed(0)}°`}
-                        loading={loading}
-                        unit=""
-                      />
+                    {currentWeatherData && (
+                      <div className="grid grid-cols-2 gap-(--sp-200) md:grid-cols-4">
+                        {/* Feels Like */}
+                        <THWPContainer
+                          title="Feels Like"
+                          value={`${currentWeatherData?.apparent_temperature.toFixed(0)}°`}
+                          loading={loading}
+                          unit=""
+                        />
 
-                      {/* Humidity */}
-                      <THWPContainer
-                        title="Humidity"
-                        value={currentWeatherData?.relative_humidity_2m.toFixed(
-                          0,
-                        )}
-                        loading={loading}
-                        unit="%"
-                      />
+                        {/* Humidity */}
+                        <THWPContainer
+                          title="Humidity"
+                          value={currentWeatherData?.relative_humidity_2m.toFixed(
+                            0,
+                          )}
+                          loading={loading}
+                          unit="%"
+                        />
 
-                      {/* Wind */}
-                      <THWPContainer
-                        title="Wind"
-                        value={currentWeatherData?.wind_speed_10m.toFixed(0)}
-                        loading={loading}
-                        unit={unit === "metric" ? "km/h" : "mph"}
-                      />
+                        {/* Wind */}
+                        <THWPContainer
+                          title="Wind"
+                          value={currentWeatherData?.wind_speed_10m.toFixed(0)}
+                          loading={loading}
+                          unit={unit === "metric" ? "km/h" : "mph"}
+                        />
 
-                      {/* Precipitation */}
-                      <THWPContainer
-                        title="Precipitation"
-                        value={currentWeatherData?.precipitation.toFixed(0)}
-                        loading={loading}
-                        unit={unit === "metric" ? "mm" : "in"}
-                      />
-                    </div>
+                        {/* Precipitation */}
+                        <THWPContainer
+                          title="Precipitation"
+                          value={currentWeatherData?.precipitation.toFixed(0)}
+                          loading={loading}
+                          unit={unit === "metric" ? "mm" : "in"}
+                        />
+                      </div>
+                    )}
                   </>
                   // )
                 }
