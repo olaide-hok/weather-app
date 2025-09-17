@@ -207,16 +207,21 @@ export default function Home() {
                   />
                 </div>
                 {/* hourly forecast tiles */}
-                {selectedData?.data?.map((item, index) => (
-                  <HourlyForecastTile
-                    key={index}
-                    time={item.time}
-                    temp={item.temp}
-                    iconSrc={item.iconSrc}
-                    desc={item.description}
-                    loading={loading}
-                  />
-                ))}
+                {loading ? (
+                  <Skeleton className="h-[3.75rem] w-full bg-(--clr-neutral-700)" />
+                ) : (
+                  <>
+                    {selectedData?.data?.map((item, index) => (
+                      <HourlyForecastTile
+                        key={index}
+                        time={item.time}
+                        temp={item.temp}
+                        iconSrc={item.iconSrc}
+                        desc={item.description}
+                      />
+                    ))}
+                  </>
+                )}
               </div>
             </section>
           )}
