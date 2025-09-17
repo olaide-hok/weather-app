@@ -208,7 +208,12 @@ export default function Home() {
                 </div>
                 {/* hourly forecast tiles */}
                 {loading ? (
-                  <Skeleton className="h-[3.75rem] w-full bg-(--clr-neutral-700)" />
+                  Array.from({ length: 8 }, (_, index) => (
+                    <Skeleton
+                      key={index}
+                      className="h-[3.75rem] w-full bg-(--clr-neutral-700)"
+                    />
+                  ))
                 ) : (
                   <>
                     {selectedData?.data?.map((item, index) => (
