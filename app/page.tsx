@@ -9,6 +9,7 @@ import HourlyForecastTile from "@/components/hourly-forecast-tile";
 import SearchBar from "@/components/search-bar";
 import { Skeleton } from "@/components/skeleton";
 import THWPContainer from "@/components/thwp-container";
+import { thwpData } from "@/data";
 import useSelectedHourlyData from "@/hooks/useSelectedHourlyData";
 import { useWeatherStore } from "@/store/weatherStore";
 import Image from "next/image";
@@ -113,17 +114,23 @@ export default function Home() {
                     </div>
                   </div>
                 )}
-                {
-                  // loading ? (
-                  //   <div className="grid grid-cols-2 gap-(--sp-200) md:grid-cols-4">
-                  //     {Array.from({ length: 4 }, (_, index) => (
-                  //       <Skeleton
-                  //         key={index}
-                  //         className="h-[10.375rem] w-full animate-pulse rounded-(--radius-12) bg-(--clr-neutral-800)"
-                  //       />
-                  //     ))}
-                  //   </div>
-                  // ) : (
+                {loading ? (
+                  <div className="grid grid-cols-2 gap-(--sp-200) md:grid-cols-4">
+                    {thwpData.map(({ title, value }, index) => (
+                      <Skeleton
+                        key={index}
+                        className="flex h-[7.375rem] w-full animate-pulse flex-col gap-y-(--sp-300) rounded-(--radius-12) border border-(--clr-neutral-600) bg-(--clr-neutral-800) p-(--sp-250) md:h-[10.375rem]"
+                      >
+                        <span className="text-(length:--fs-18) leading-(--lh-120) font-medium text-(--clr-neutral-200)">
+                          {title}
+                        </span>
+                        <span className="text-(length:--fs-32) font-light text-(--clr-neutral-0)">
+                          {value}
+                        </span>
+                      </Skeleton>
+                    ))}
+                  </div>
+                ) : (
                   <>
                     {/* thwp containers */}
                     {currentWeatherData && (
@@ -132,7 +139,6 @@ export default function Home() {
                         <THWPContainer
                           title="Feels Like"
                           value={`${currentWeatherData?.apparent_temperature.toFixed(0)}°`}
-                          loading={loading}
                           unit=""
                         />
 
@@ -142,7 +148,6 @@ export default function Home() {
                           value={currentWeatherData?.relative_humidity_2m.toFixed(
                             0,
                           )}
-                          loading={loading}
                           unit="%"
                         />
 
@@ -150,7 +155,6 @@ export default function Home() {
                         <THWPContainer
                           title="Wind"
                           value={currentWeatherData?.wind_speed_10m.toFixed(0)}
-                          loading={loading}
                           unit={unit === "metric" ? "km/h" : "mph"}
                         />
 
@@ -158,14 +162,12 @@ export default function Home() {
                         <THWPContainer
                           title="Precipitation"
                           value={currentWeatherData?.precipitation.toFixed(0)}
-                          loading={loading}
                           unit={unit === "metric" ? "mm" : "in"}
                         />
                       </div>
                     )}
                   </>
-                  // )
-                }
+                )}
                 {/* daily forecast */}
                 <div className="flex flex-col gap-y-(--sp-250)">
                   <h3 className="text-(length:--fs-18) leading-(--lh-120) font-semibold text-(--clr-neutral-0)">
@@ -201,6 +203,7 @@ export default function Home() {
                     selectedDay={selectedDay}
                     setSelectedDay={setSelectedDay}
                     hourlyForecastDataPerDay={hourlyForecastData}
+                    loading={loading}
                   />
                 </div>
                 {/* hourly forecast tiles */}
