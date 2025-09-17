@@ -9,6 +9,7 @@ interface HourlyForecastDropdownProps {
   selectedDay: string;
   setSelectedDay: (day: string) => void;
   hourlyForecastDataPerDay: HourlyForecastDataPerDay[] | null;
+  loading: boolean;
 }
 
 /**
@@ -20,6 +21,7 @@ const HourlyForecastDropdown = ({
   selectedDay,
   setSelectedDay,
   hourlyForecastDataPerDay,
+  loading,
 }: HourlyForecastDropdownProps) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -29,11 +31,14 @@ const HourlyForecastDropdown = ({
   };
 
   return (
-    <div className="relative cursor-pointer rounded-(--radius-8) bg-(--clr-neutral-600) px-(--sp-200) py-(--sp-100)">
+    <div
+      className={`relative rounded-(--radius-8) bg-(--clr-neutral-600) px-(--sp-200) py-(--sp-100)`}
+    >
       <button
         type="button"
-        className="flex items-center gap-x-(--sp-075)"
+        className={` ${loading ? "cursor-not-allowed" : "cursor-pointer"} flex items-center gap-x-(--sp-075)`}
         onClick={() => setShowDropdown(!showDropdown)}
+        disabled={loading}
       >
         <span className="text-(length:--fs-16) leading-normal font-medium text-(--clr-neutral-0)">
           {selectedDay}
