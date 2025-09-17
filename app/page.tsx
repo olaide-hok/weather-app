@@ -7,6 +7,7 @@ import { HeroLoading } from "@/components/hero-loading";
 import HourlyForecastDropdown from "@/components/hourly-forecast-dropdown";
 import HourlyForecastTile from "@/components/hourly-forecast-tile";
 import SearchBar from "@/components/search-bar";
+import { Skeleton } from "@/components/skeleton";
 import THWPContainer from "@/components/thwp-container";
 import useSelectedHourlyData from "@/hooks/useSelectedHourlyData";
 import { useWeatherStore } from "@/store/weatherStore";
@@ -112,7 +113,17 @@ export default function Home() {
                     </div>
                   </div>
                 )}
-                {currentWeatherData && (
+                {
+                  // loading ? (
+                  //   <div className="grid grid-cols-2 gap-(--sp-200) md:grid-cols-4">
+                  //     {Array.from({ length: 4 }, (_, index) => (
+                  //       <Skeleton
+                  //         key={index}
+                  //         className="h-[10.375rem] w-full animate-pulse rounded-(--radius-12) bg-(--clr-neutral-800)"
+                  //       />
+                  //     ))}
+                  //   </div>
+                  // ) : (
                   <>
                     {/* thwp containers */}
                     <div className="grid grid-cols-2 gap-(--sp-200) md:grid-cols-4">
@@ -151,24 +162,30 @@ export default function Home() {
                       />
                     </div>
                   </>
-                )}
+                  // )
+                }
                 {/* daily forecast */}
                 <div className="flex flex-col gap-y-(--sp-250)">
                   <h3 className="text-(length:--fs-18) leading-(--lh-120) font-semibold text-(--clr-neutral-0)">
                     Daily forecast
                   </h3>
                   <div className="grid grid-cols-3 gap-(--sp-200) md:grid-cols-7">
-                    {dailyForecastData &&
-                      dailyForecastData.map((item, index) => (
-                        <DailyForecastCard
-                          key={index}
-                          day={item.day}
-                          desc={item.desc}
-                          iconSrc={item.iconSrc}
-                          values={item.values}
-                          loading={loading}
-                        />
-                      ))}
+                    {loading
+                      ? Array.from({ length: 7 }, (_, index) => (
+                          <Skeleton
+                            key={index}
+                            className="h-[10.3125rem] w-[6.47875rem] animate-pulse rounded-(--radius-12) bg-(--clr-neutral-800) md:w-[5.57143rem] xl:w-[6.28571rem]"
+                          />
+                        ))
+                      : dailyForecastData?.map((item, index) => (
+                          <DailyForecastCard
+                            key={index}
+                            day={item.day}
+                            desc={item.desc}
+                            iconSrc={item.iconSrc}
+                            values={item.values}
+                          />
+                        ))}
                   </div>
                 </div>
               </div>
@@ -185,17 +202,16 @@ export default function Home() {
                   />
                 </div>
                 {/* hourly forecast tiles */}
-                {selectedData &&
-                  selectedData?.data?.map((item, index) => (
-                    <HourlyForecastTile
-                      key={index}
-                      time={item.time}
-                      temp={item.temp}
-                      iconSrc={item.iconSrc}
-                      desc={item.description}
-                      loading={loading}
-                    />
-                  ))}
+                {selectedData?.data?.map((item, index) => (
+                  <HourlyForecastTile
+                    key={index}
+                    time={item.time}
+                    temp={item.temp}
+                    iconSrc={item.iconSrc}
+                    desc={item.description}
+                    loading={loading}
+                  />
+                ))}
               </div>
             </section>
           )}
