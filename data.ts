@@ -112,6 +112,56 @@ export const hourlyForecastData = [
     temp: "17°",
   },
 ];
+export const hourlyForecastDataNew = [
+  {
+    time: "4 PM",
+    description: "Overcast",
+    iconSrc: "/images/icon-overcast.webp",
+    temp: "20°",
+  },
+  {
+    time: "5 PM",
+    description: "Partly Cloudy",
+    iconSrc: "/images/icon-partly-cloudy.webp",
+    temp: "20°",
+  },
+  {
+    time: "6 PM",
+    description: "Sunny",
+    iconSrc: "/images/icon-sunny.webp",
+    temp: "20°",
+  },
+  {
+    time: "6 PM",
+    description: "Overcast",
+    iconSrc: "/images/icon-overcast.webp",
+    temp: "19°",
+  },
+  {
+    time: "7 PM",
+    description: "Snow",
+    iconSrc: "/images/icon-snow.webp",
+    temp: "18°",
+  },
+  {
+    time: "8 PM",
+    description: "Fog",
+    iconSrc: "/images/icon-fog.webp",
+    temp: "18°",
+  },
+  {
+    time: "9 PM",
+    description: "Snow",
+    iconSrc: "/images/icon-snow.webp",
+    temp: "17°",
+  },
+  {
+    time: "10 PM",
+    description: "Overcast",
+    iconSrc: "/images/icon-overcast.webp",
+    temp: "17°",
+  },
+];
 
 export const days = [
   "Monday",
@@ -174,5 +224,28 @@ export const units = [
   {
     title: "Precipitation",
     options: precipitation,
+  },
+];
+
+export const hourlyForecastDataPerDay = [
+  {
+    day: "Monday",
+    data: hourlyForecastData,
+  },
+  {
+    day: "Tuesday",
+    data: hourlyForecastDataNew,
+  },
+  {
+    day: "Wednesday",
+    data: hourlyForecastData,
+  },
+  {
+    day: "Thursday",
+    data: hourlyForecastData,
+  },
+  {
+    day: "Friday",
+    data: hourlyForecastData,
   },
 ];
