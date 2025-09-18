@@ -34,9 +34,8 @@ export default function Home() {
     dailyForecastData,
     hourlyForecastData,
     error: apiError,
+    noResultFound,
   } = useWeatherStore();
-
-  const noResultFound = false;
 
   useEffect(() => {
     fetchCurrentWeatherData();
