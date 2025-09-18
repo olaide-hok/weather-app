@@ -21,6 +21,8 @@ const SearchBar = () => {
     fetchDailyForecastData,
     fetchHourlyForecastData,
     setCoordinates,
+    noResultFound,
+    toggleResultFound,
   } = useWeatherStore();
   const [searchText, setSearchText] = useState(""); // user input
   const [suppressSuggestions, setSuppressSuggestions] = useState(false); // prevent dropdown from reappearing
@@ -48,6 +50,10 @@ const SearchBar = () => {
 
     if (geocodeData?.results) {
       setSuggestions(geocodeData.results); // populate suggestions array for dropdown.
+      toggleResultFound(false);
+    }
+    if (!geocodeData?.results) {
+      toggleResultFound(true);
     }
   }, [geocodeData, searchText]);
 
@@ -83,13 +89,18 @@ const SearchBar = () => {
         {/* search button */}
         <button
           type="button"
-          className={`${selectedSuggestion === null || isLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"} font-dm-sans rounded-(--radius-12) bg-(--clr-blue-500) px-(--sp-300) py-(--sp-200) text-(length:--fs-20) leading-(--lh-120) font-medium text-(--clr-neutral-0)`}
+          className={`${selectedSuggestion === null || isLoading || noResultFound || !searchText ? "cursor-not-allowed opacity-50" : "cursor-pointer"} font-dm-sans rounded-(--radius-12) bg-(--clr-blue-500) px-(--sp-300) py-(--sp-200) text-(length:--fs-20) leading-(--lh-120) font-medium text-(--clr-neutral-0)`}
           onClick={() => {
             if (selectedSuggestion !== null) {
               searchWeatherInfo(selectedSuggestion);
             }
           }}
-          disabled={selectedSuggestion === null || isLoading}
+          disabled={
+            selectedSuggestion === null ||
+            isLoading ||
+            noResultFound ||
+            !searchText.trim()
+          }
         >
           Search
         </button>
