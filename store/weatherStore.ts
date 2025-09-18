@@ -50,6 +50,8 @@ interface WeatherStoreState {
   long: number;
   loading: boolean;
   error: boolean;
+  noResultFound: boolean;
+  toggleResultFound: (value: boolean) => void;
   setCityName: (name: string) => void;
   setCoordinates: (lat: number, long: number) => void;
   fetchCurrentWeatherData: () => Promise<void>;
@@ -77,6 +79,11 @@ export const useWeatherStore = create<WeatherStoreState>((set, get) => ({
   long: berlinGermanyCoordinates.long,
   loading: false,
   error: false,
+  noResultFound: false,
+  toggleResultFound: (value) =>
+    set({
+      noResultFound: value,
+    }),
   setCityName: (name) =>
     set({
       cityName: name,
