@@ -78,7 +78,7 @@ const SearchBar = () => {
           <input
             type="text"
             placeholder="Search for a place..."
-            className="w-full rounded-(--radius-12) bg-(--clr-neutral-800) py-(--sp-200) pr-(--sp-300) pl-[3.75rem] text-(length:--fs-20) leading-(--lh-120) font-medium text-(--clr-neutral-0) placeholder:font-medium placeholder:text-(--clr-neutral-200)"
+            className="w-full cursor-pointer rounded-(--radius-12) bg-(--clr-neutral-800) py-(--sp-200) pr-(--sp-300) pl-[3.75rem] text-(length:--fs-20) leading-(--lh-120) font-medium text-(--clr-neutral-0) placeholder:font-medium placeholder:text-(--clr-neutral-200)"
             value={searchText}
             onChange={(e) => {
               setSearchText(e.target.value);
@@ -89,7 +89,7 @@ const SearchBar = () => {
         {/* search button */}
         <button
           type="button"
-          className={`${selectedSuggestion === null || isLoading || noResultFound || !searchText ? "cursor-not-allowed opacity-50" : "cursor-pointer"} font-dm-sans rounded-(--radius-12) bg-(--clr-blue-500) px-(--sp-300) py-(--sp-200) text-(length:--fs-20) leading-(--lh-120) font-medium text-(--clr-neutral-0)`}
+          className={`${selectedSuggestion === null || isLoading || noResultFound || !searchText ? "cursor-not-allowed opacity-50" : "cursor-pointer"} font-dm-sans rounded-(--radius-12) bg-(--clr-blue-500) px-(--sp-300) py-(--sp-200) text-(length:--fs-20) leading-(--lh-120) font-medium text-(--clr-neutral-0) hover:bg-(--clr-blue-700) focus-visible:outline-offset-2 focus-visible:outline-(--clr-blue-500) focus-visible:outline-solid`}
           onClick={() => {
             if (selectedSuggestion !== null) {
               searchWeatherInfo(selectedSuggestion);

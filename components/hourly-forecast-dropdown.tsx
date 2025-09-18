@@ -32,11 +32,11 @@ const HourlyForecastDropdown = ({
 
   return (
     <div
-      className={`relative rounded-(--radius-8) bg-(--clr-neutral-600) px-(--sp-200) py-(--sp-100)`}
+      className={`relative rounded-(--radius-8) bg-(--clr-neutral-600) focus-visible:outline-offset-2 focus-visible:outline-(--clr-neutral-0) focus-visible:outline-solid`}
     >
       <button
         type="button"
-        className={` ${loading ? "cursor-not-allowed" : "cursor-pointer"} flex items-center gap-x-(--sp-075)`}
+        className={` ${loading ? "cursor-not-allowed" : "cursor-pointer"} flex w-full items-center gap-x-(--sp-075) px-(--sp-200) py-(--sp-100)`}
         onClick={() => setShowDropdown(!showDropdown)}
         disabled={loading}
       >

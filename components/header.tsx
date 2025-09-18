@@ -40,7 +40,7 @@ const Header = () => {
       {/* units dropdown */}
       <div
         ref={dropdownRef}
-        className="relative cursor-pointer rounded-(--radius-6) bg-(--clr-neutral-800)"
+        className="relative cursor-pointer rounded-(--radius-6) bg-(--clr-neutral-800) focus-visible:outline-offset-2 focus-visible:outline-(--clr-neutral-0) focus-visible:outline-solid"
       >
         <button
           type="button"
