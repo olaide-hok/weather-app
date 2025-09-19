@@ -193,7 +193,7 @@ export default function Home() {
                 </div>
               </div>
               {/* hourly forecast */}
-              <div className="flex w-full flex-col gap-y-(--sp-200) rounded-(--radius-20) bg-(--clr-neutral-800) px-(--sp-200) py-(--sp-250) lg:flex-1">
+              <div className="flex h-[41.8125rem] w-full flex-col gap-y-(--sp-200) rounded-(--radius-20) bg-(--clr-neutral-800) px-(--sp-200) py-(--sp-250) md:h-[44.6125rem] lg:flex-1">
                 <div className="flex w-full items-center justify-between">
                   <span className="text-(length:--fs-20) leading-(--lh-120) font-semibold text-(--clr-neutral-0)">
                     Hourly forecast
@@ -214,7 +214,7 @@ export default function Home() {
                     />
                   ))
                 ) : (
-                  <>
+                  <div className="scrollbar flex h-full flex-col gap-y-(--sp-200) overflow-y-auto pr-(--sp-100)">
                     {selectedData?.data?.map((item, index) => (
                       <HourlyForecastTile
                         key={index}
@@ -224,7 +224,7 @@ export default function Home() {
                         desc={item.description}
                       />
                     ))}
-                  </>
+                  </div>
                 )}
               </div>
             </section>
