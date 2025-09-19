@@ -1,6 +1,6 @@
 # Frontend Mentor - Weather app solution
 
-This is a solution to the [Weather app challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/weather-app-K1FhddVm49). Frontend Mentor challenges help you improve your coding skills by building realistic projects.
+This is my solution to the [Weather app challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/weather-app-K1FhddVm49). Frontend Mentor challenges help you improve your coding skills by building realistic projects.
 
 ## Table of contents
 
@@ -47,12 +47,18 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [Link](https://your-solution-url.com)
-- Live Site URL: [Link](https://your-live-site-url.com)
+- Solution URL: [Link](https://github.com/olaide-hok/weather-app)
+- Live Site URL: [Link](https://weather-app-teal-eight-61.vercel.app/)
 
 ## Getting Started
 
-First, run the development server:
+First clone the repository `git clone https://github.com/olaide-hok/weather-app.git`
+
+Change directory into the cloned folder `cd weather-app`
+
+Run `npm install` to install dependencies.
+
+Then, run the development server:
 
 ```bash
 npm run dev
