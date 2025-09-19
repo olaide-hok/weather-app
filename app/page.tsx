@@ -10,7 +10,6 @@ import SearchBar from "@/components/search-bar";
 import { Skeleton } from "@/components/skeleton";
 import THWPContainer from "@/components/thwp-container";
 import { thwpData } from "@/data";
-import useSelectedHourlyData from "@/hooks/useSelectedHourlyData";
 import { useWeatherStore } from "@/store/weatherStore";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -55,10 +54,7 @@ export default function Home() {
   );
 
   const [selectedDay, setSelectedDay] = useState(today);
-  const selectedData = useSelectedHourlyData(
-    hourlyForecastData ?? [],
-    selectedDay,
-  );
+  const selectedData = hourlyForecastData?.find((d) => d.day === selectedDay);
 
   return (
     <main className="flex w-[23.4375rem] flex-col items-center px-(--sp-200) pt-(--sp-200) pb-(--sp-600) md:w-full md:px-(--sp-300) md:pt-(--sp-300) md:pb-(--sp-1000) lg:px-(--sp-1400) lg:py-(--sp-600) 2xl:max-w-[90rem]">
