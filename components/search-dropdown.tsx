@@ -14,7 +14,7 @@ interface SearchDropdownProps {
 
 const SearchDropdown = ({ suggestions, onSelect }: SearchDropdownProps) => {
   return (
-    <div className="absolute top-[4rem] z-10 flex max-h-[11.5rem] flex-col gap-y-(--sp-050) overflow-y-auto rounded-(--radius-12) border border-(--clr-neutral-700) bg-(--clr-neutral-800) p-(--sp-100) lg:w-[32.875rem]">
+    <div className="scrollbar absolute top-[4rem] z-10 flex max-h-[11.5rem] flex-col gap-y-(--sp-050) overflow-y-auto rounded-(--radius-12) border border-(--clr-neutral-700) bg-(--clr-neutral-800) p-(--sp-100) lg:w-[32.875rem]">
       {suggestions.map((suggestion, index) => (
         <span
           key={index}
