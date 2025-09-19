@@ -52,7 +52,7 @@ const SearchBar = () => {
       setSuggestions(geocodeData.results); // populate suggestions array for dropdown.
       toggleResultFound(false);
     }
-    if (!geocodeData?.results) {
+    if (isLoading && !geocodeData?.results) {
       toggleResultFound(true);
     }
   }, [geocodeData, searchText]);
@@ -106,8 +106,19 @@ const SearchBar = () => {
         </button>
       </div>
       {/* suggestions */}
-      {!isLoading && suggestions.length > 0 && (
-        <SearchDropdown suggestions={suggestions} onSelect={handleSelect} />
+      {isLoading ? (
+        <div className="absolute top-[4rem] z-10 flex max-h-[11.5rem] flex-col gap-y-(--sp-050) rounded-(--radius-12) border border-(--clr-neutral-700) bg-(--clr-neutral-800) p-(--sp-100) lg:w-[32.875rem]">
+          <div className="flex gap-x-(--sp-125) px-(--sp-100) py-(--sp-125)">
+            <Icons.loading />
+            <span className="text-(length:--fs-16) leading-(--lh-120) font-medium text-(--clr-neutral-0)">
+              Search in progress
+            </span>
+          </div>
+        </div>
+      ) : (
+        suggestions.length > 0 && (
+          <SearchDropdown suggestions={suggestions} onSelect={handleSelect} />
+        )
       )}
     </div>
   );
