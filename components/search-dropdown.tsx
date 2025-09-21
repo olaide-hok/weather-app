@@ -22,6 +22,7 @@ const SearchDropdown = ({ suggestions, onSelect }: SearchDropdownProps) => {
         <div
           key={index}
           className="flex cursor-pointer items-center gap-x-(--sp-100) px-(--sp-100) py-(--sp-125) hover:rounded-(--radius-8) hover:border hover:border-(--clr-neutral-600) hover:bg-(--clr-neutral-700)"
+          onClick={() => onSelect(suggestion)}
         >
           <CircleFlag
             countryCode={suggestion.country_code.toLowerCase()}
@@ -29,9 +30,9 @@ const SearchDropdown = ({ suggestions, onSelect }: SearchDropdownProps) => {
           />
           <span
             className={`text-(length:--fs-16) leading-(--lh-120) font-(familiy-name:--font-dm-sans) text-(--clr-neutral-0)`}
-            onClick={() => onSelect(suggestion)}
           >
-            {suggestion.name}, {suggestion.country}
+            {suggestion.name}
+            {suggestion.country ? `, ${suggestion.country}` : ""}
           </span>
         </div>
       ))}
