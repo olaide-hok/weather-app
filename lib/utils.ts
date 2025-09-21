@@ -6,8 +6,8 @@ import { DailyForecast, HourlyForecastDataPerDay } from "@/store/weatherStore";
 const weatherAPIUrl = "https://api.open-meteo.com/v1/forecast";
 
 type FetchedWeatherData = {
-  lat: number;
-  long: number;
+  lat: number | null;
+  long: number | null;
 };
 
 // build weather params
@@ -311,11 +311,37 @@ export async function fetchHourlyWeatherData(
       ),
       weather_code: hourly.variables(0)!.valuesArray(),
       temperature_2m: hourly.variables(1)!.valuesArray(),
+      visibility: hourly.variables(2)!.valuesArray(),
     },
   };
+  console.log("\nHourly data", weatherData.hourly);
 
   // Format data for hourly forecast
   const hourlyForecastData = formatHourlyForecast(weatherData.hourly);
   const hourlyForecastDataPerDay = groupHourlyForecastByDay(hourlyForecastData);
   return hourlyForecastDataPerDay;
+}
+
+// detect user location
+export function detectUserLocation(): Promise<{
+  lat: number;
+  long: number;
+} | null> {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      resolve(null); // browser doesn't support
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        resolve({
+          lat: pos.coords.latitude,
+          long: pos.coords.longitude,
+        });
+      },
+      () => resolve(null), // user denied or error
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
+    );
+  });
 }
