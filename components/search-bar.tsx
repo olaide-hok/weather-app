@@ -27,7 +27,9 @@ const SearchBar = () => {
   const [searchText, setSearchText] = useState(""); // user input
   const [suppressSuggestions, setSuppressSuggestions] = useState(false); // prevent dropdown from reappearing
   const debouncedSearchText = useDebounce(searchText, 500); // debounce search text
-  const { geocodeData, isLoading } = useGetCoordinates(debouncedSearchText); // fetch geocode data (i.e latitude and longitude).
+  const { geocodeData, isLoading } = useGetCoordinates(
+    suppressSuggestions ? "" : debouncedSearchText,
+  ); // fetch geocode data (i.e latitude and longitude).
   const [suggestions, setSuggestions] = useState([]); // suggestions from geocode data to populate dropdown.
   const [selectedSuggestion, setSelectedSuggestion] =
     useState<Suggestion | null>(null);
