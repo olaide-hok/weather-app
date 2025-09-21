@@ -311,10 +311,8 @@ export async function fetchHourlyWeatherData(
       ),
       weather_code: hourly.variables(0)!.valuesArray(),
       temperature_2m: hourly.variables(1)!.valuesArray(),
-      visibility: hourly.variables(2)!.valuesArray(),
     },
   };
-  console.log("\nHourly data", weatherData.hourly);
 
   // Format data for hourly forecast
   const hourlyForecastData = formatHourlyForecast(weatherData.hourly);
