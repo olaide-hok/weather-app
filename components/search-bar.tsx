@@ -33,7 +33,10 @@ const SearchBar = () => {
     useState<Suggestion | null>(null);
 
   const handleSelect = (suggestion: Suggestion) => {
-    setSearchText(suggestion.name + " " + suggestion.country); // autofill input
+    setSearchText(
+      suggestion.name +
+        `${suggestion.country ? `, ${suggestion.country}` : ""}`,
+    ); // autofill input
     setSuggestions([]); // hide dropdown
     setSelectedSuggestion(suggestion);
     setSuppressSuggestions(true); // prevent dropdown from reappearing
@@ -58,8 +61,10 @@ const SearchBar = () => {
   }, [geocodeData, searchText]);
 
   const searchWeatherInfo = async (suggestion: Suggestion) => {
-    // console.log("selected suggestion", searchText);
-    setCityName(suggestion.name + " " + suggestion.country);
+    setCityName(
+      suggestion.name +
+        `${suggestion.country ? `, ${suggestion.country}` : ""}`,
+    );
     setCoordinates(suggestion.latitude, suggestion.longitude);
     fetchCurrentWeatherData();
     fetchDailyForecastData();
