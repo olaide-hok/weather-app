@@ -171,10 +171,15 @@ export default function Home() {
                   <div className="grid grid-cols-3 gap-(--sp-200) md:grid-cols-7">
                     {loading
                       ? Array.from({ length: 7 }, (_, index) => (
-                          <Skeleton
+                          <div
                             key={index}
-                            className="h-[10.3125rem] w-[6.47875rem] animate-pulse rounded-(--radius-12) bg-(--clr-neutral-800) md:w-[5.57143rem] xl:w-[6.28571rem]"
-                          />
+                            className="flex flex-col gap-y-(--sp-050)"
+                          >
+                            <Skeleton className="h-[10.3125rem] w-[6.47875rem] animate-pulse rounded-(--radius-12) bg-(--clr-neutral-800) md:w-[5.57143rem] xl:w-[6.28571rem]" />
+                            <Skeleton className="h-[1.8125rem] w-[6.47875rem] animate-pulse rounded-(--radius-12) bg-(--clr-neutral-800) md:w-[5.57143rem] xl:w-[6.28571rem]" />
+                            <Skeleton className="h-[1.8125rem] w-[6.47875rem] animate-pulse rounded-(--radius-12) bg-(--clr-neutral-800) md:w-[5.57143rem] xl:w-[6.28571rem]" />
+                            <Skeleton className="h-[4.875rem] w-[6.47875rem] animate-pulse rounded-(--radius-12) bg-(--clr-neutral-800) md:w-[5.57143rem] xl:w-[6.28571rem]" />
+                          </div>
                         ))
                       : dailyForecastData?.map((item, index) => (
                           <DailyForecastCard
@@ -183,13 +188,16 @@ export default function Home() {
                             desc={item.desc}
                             iconSrc={item.iconSrc}
                             values={item.values}
+                            sunrise={item.sunrise}
+                            sunset={item.sunset}
+                            uvIndex={item.uvIndex}
                           />
                         ))}
                   </div>
                 </div>
               </div>
               {/* hourly forecast */}
-              <div className="flex h-[41.8125rem] w-full flex-col gap-y-(--sp-200) rounded-(--radius-20) bg-(--clr-neutral-800) px-(--sp-200) py-(--sp-250) md:h-[44.6125rem] lg:flex-1">
+              <div className="flex h-[41.8125rem] w-full flex-col gap-y-(--sp-200) rounded-(--radius-20) bg-(--clr-neutral-800) px-(--sp-200) py-(--sp-250) md:h-[54.5rem] lg:flex-1">
                 <div className="flex w-full items-center justify-between">
                   <span className="text-(length:--fs-20) leading-(--lh-120) font-semibold text-(--clr-neutral-0)">
                     Hourly forecast
@@ -203,7 +211,7 @@ export default function Home() {
                 </div>
                 {/* hourly forecast tiles */}
                 {loading ? (
-                  Array.from({ length: 8 }, (_, index) => (
+                  Array.from({ length: 11 }, (_, index) => (
                     <Skeleton
                       key={index}
                       className="h-[3.75rem] w-full bg-(--clr-neutral-700)"
