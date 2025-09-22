@@ -44,7 +44,8 @@ export default function Home() {
       const pos = await detectUserLocation();
       if (pos) {
         setCoordinates(pos.lat, pos.long);
-        setCityName("Your Location");
+        // setCityName("Your Location");
+        setCityName(pos.cityName);
         fetchCurrentWeatherData();
         fetchDailyForecast();
         fetchHourlyForecast();
