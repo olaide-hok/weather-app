@@ -3,6 +3,7 @@ import {
   fetchCurrentWeatherData,
   fetchDailyWeatherData,
   fetchHourlyWeatherData,
+  UVCategory,
 } from "@/lib/utils";
 
 // Berlin, Germany coordinates for initial state
@@ -25,6 +26,9 @@ export type DailyForecast = {
   desc: string;
   iconSrc: string;
   values: string[];
+  sunrise: string;
+  sunset: string;
+  uvIndex: UVCategory;
 };
 
 type HourlyForecast = {
