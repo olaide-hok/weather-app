@@ -414,25 +414,69 @@ export async function fetchHourlyWeatherData(
 }
 
 // detect user location
-export function detectUserLocation(): Promise<{
+// export function detectUserLocation(): Promise<{
+//   lat: number;
+//   long: number;
+// } | null> {
+//   return new Promise((resolve) => {
+//     if (!navigator.geolocation) {
+//       resolve(null); // browser doesn't support
+//       return;
+//     }
+
+//     navigator.geolocation.getCurrentPosition(
+//       (pos) => {
+//         resolve({
+//           lat: pos.coords.latitude,
+//           long: pos.coords.longitude,
+//         });
+//       },
+//       () => resolve(null), // user denied or error
+//       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
+//     );
+//   });
+// }
+
+const nominatimReverseBase =
+  "https://nominatim.openstreetmap.org/reverse?format=jsonv2";
+
+export async function detectUserLocation(): Promise<{
   lat: number;
   long: number;
+  cityName: string;
 } | null> {
-  return new Promise((resolve) => {
+  try {
     if (!navigator.geolocation) {
-      resolve(null); // browser doesn't support
-      return;
+      return null; // Browser doesn't support geolocation
     }
 
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        resolve({
-          lat: pos.coords.latitude,
-          long: pos.coords.longitude,
-        });
-      },
-      () => resolve(null), // user denied or error
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
-    );
-  });
+    const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      });
+    });
+
+    const { latitude, longitude } = pos.coords;
+
+    // Reverse geocoding request to Nominatim
+    const url = `${nominatimReverseBase}&lat=${encodeURIComponent(
+      String(latitude),
+    )}&lon=${encodeURIComponent(String(longitude))}&accept-language=en`;
+
+    const locationData = await fetch(url).then((response) => response.json());
+
+    return {
+      lat: latitude,
+      long: longitude,
+      cityName:
+        locationData.address.state + ", " + locationData.address.country ||
+        locationData.address.town ||
+        "",
+    };
+  } catch (error) {
+    console.error("detectUserLocation error:", error);
+    return null; // User denied or error occurred
+  }
 }
