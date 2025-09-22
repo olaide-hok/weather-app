@@ -226,6 +226,8 @@ export default function Home() {
                         temp={item.temp}
                         iconSrc={item.iconSrc}
                         desc={item.description}
+                        visibility={item.visibility}
+                        surfacePressure={item.surfacePressure}
                       />
                     ))}
                   </div>
