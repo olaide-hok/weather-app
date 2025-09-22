@@ -211,10 +211,10 @@ export default function Home() {
                 </div>
                 {/* hourly forecast tiles */}
                 {loading ? (
-                  Array.from({ length: 11 }, (_, index) => (
+                  Array.from({ length: 8 }, (_, index) => (
                     <Skeleton
                       key={index}
-                      className="h-[3.75rem] w-full bg-(--clr-neutral-700)"
+                      className="h-[6.425rem] w-full bg-(--clr-neutral-700)"
                     />
                   ))
                 ) : (
