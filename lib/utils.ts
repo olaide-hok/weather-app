@@ -29,8 +29,20 @@ function buildWeatherParams(
       "relative_humidity_2m",
       "apparent_temperature",
     ],
-    daily: ["weather_code", "temperature_2m_max", "temperature_2m_min"],
-    hourly: ["weather_code", "temperature_2m"],
+    daily: [
+      "weather_code",
+      "temperature_2m_max",
+      "temperature_2m_min",
+      "sunrise",
+      "sunset",
+      "uv_index_max",
+    ],
+    hourly: [
+      "weather_code",
+      "temperature_2m",
+      "visibility",
+      "surface_pressure",
+    ],
   };
   // unit overrides
   const unitOverrides =
@@ -148,10 +160,37 @@ const weatherCodeMap: Record<number, { desc: string; iconSrc: string }> = {
   },
 };
 
+// map the UV index to a category
+export type UVCategory = {
+  level: string;
+  color: string;
+};
+
+export function mapUVIndex(uvIndex: number): UVCategory {
+  if (uvIndex <= 2) {
+    return { level: "Low", color: "bg-green-500" }; // green
+  } else if (uvIndex <= 5) {
+    return { level: "Moderate", color: "bg-yellow-400" }; // yellow
+  } else if (uvIndex <= 7) {
+    return { level: "High", color: "bg-orange-500" }; // orange
+  } else if (uvIndex <= 10) {
+    return { level: "Very High", color: "bg-red-600" }; // red
+  } else {
+    return { level: "Extreme", color: "bg-purple-700" }; // purple
+  }
+}
+
 // format the daily forecast data from the Open Meteo Weather API.
 export function formatDailyForecast(apiResponse: any): DailyForecast[] {
-  const { time, weather_code, temperature_2m_max, temperature_2m_min } =
-    apiResponse;
+  const {
+    time,
+    weather_code,
+    temperature_2m_max,
+    temperature_2m_min,
+    sunrise,
+    sunset,
+    uv_index_max,
+  } = apiResponse;
 
   const formatted = time.map((t: string, index: number) => {
     const code = weather_code[index];
@@ -167,6 +206,15 @@ export function formatDailyForecast(apiResponse: any): DailyForecast[] {
         `${Math.round(temperature_2m_max[index])}°`,
         `${Math.round(temperature_2m_min[index])}°`,
       ],
+      sunrise: new Date(sunrise[index]).toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      sunset: new Date(sunset[index]).toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      uvIndex: mapUVIndex(Math.round(uv_index_max[index])),
     };
   });
 
@@ -187,6 +235,9 @@ export async function fetchDailyWeatherData(
   const utcOffsetSeconds = response.utcOffsetSeconds();
   // Attributes for daily
   const daily = response.daily()!;
+  // Define Int64 variables so they can be processed accordingly
+  const sunrise = daily.variables(3)!;
+  const sunset = daily.variables(4)!;
   // Weather data
   const weatherData = {
     daily: {
@@ -204,11 +255,39 @@ export async function fetchDailyWeatherData(
       weather_code: daily.variables(0)!.valuesArray(),
       temperature_2m_max: daily.variables(1)!.valuesArray(),
       temperature_2m_min: daily.variables(2)!.valuesArray(),
+      // Map Int64 values to according structure
+      sunrise: [...Array(sunrise.valuesInt64Length())].map(
+        (_, i) =>
+          new Date((Number(sunrise.valuesInt64(i)) + utcOffsetSeconds) * 1000),
+      ),
+      // Map Int64 values to according structure
+      sunset: [...Array(sunset.valuesInt64Length())].map(
+        (_, i) =>
+          new Date((Number(sunset.valuesInt64(i)) + utcOffsetSeconds) * 1000),
+      ),
+      uv_index_max: daily.variables(5)!.valuesArray(),
     },
   };
   // Format data for daily forecast card
   const dailyForecastData = formatDailyForecast(weatherData.daily);
   return dailyForecastData;
+}
+
+// format visibility
+type UnitSystem = "metric" | "imperial";
+
+export function formatVisibility(value: number, system: UnitSystem): string {
+  if (system === "metric") {
+    // Value is in meters -> convert to km if > 1000
+    return value >= 1000 ? `${(value / 1000).toFixed(1)} km` : `${value} m`;
+  }
+
+  if (system === "imperial") {
+    // Value is in feet -> convert to miles if > 5280
+    return value >= 5280 ? `${(value / 5280).toFixed(1)} mi` : `${value} ft`;
+  }
+
+  return `${value}`;
 }
 
 type HourlyForecastWithDay = {
@@ -217,18 +296,24 @@ type HourlyForecastWithDay = {
   iconSrc: string;
   temp: string;
   day: string;
+  visibility: string;
+  surfacePressure: string;
 };
 
 // format Open Meteo API response hourly data into per-hour structure.
 export function formatHourlyForecast(
   apiResponse: any,
+  unit: UnitSystem,
 ): HourlyForecastWithDay[] {
-  const { time, weather_code, temperature_2m } = apiResponse;
+  const { time, weather_code, temperature_2m, visibility, surface_pressure } =
+    apiResponse;
 
   const hourlyForecastData = time.map((time: Date, index: number) => {
     const code = weather_code[index];
     const temp = temperature_2m[index];
     const { desc, iconSrc } = weatherCodeMap[code];
+    const vis = visibility[index];
+    const pressure = surface_pressure[index];
 
     return {
       time: new Intl.DateTimeFormat("en-US", {
@@ -239,6 +324,8 @@ export function formatHourlyForecast(
       iconSrc,
       temp: `${Math.round(temp)}°`,
       day: new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(time), // "Monday"
+      visibility: formatVisibility(vis, unit),
+      surfacePressure: `${(pressure / 10).toFixed(1)} kPa`,
     };
   });
 
@@ -257,6 +344,8 @@ function groupHourlyForecastByDay(
         description: curr.description,
         iconSrc: curr.iconSrc,
         temp: curr.temp,
+        visibility: curr.visibility,
+        surfacePressure: curr.surfacePressure,
       });
     } else {
       acc.push({
@@ -267,6 +356,8 @@ function groupHourlyForecastByDay(
             description: curr.description,
             iconSrc: curr.iconSrc,
             temp: curr.temp,
+            visibility: curr.visibility,
+            surfacePressure: curr.surfacePressure,
           },
         ],
       });
@@ -280,7 +371,7 @@ function groupHourlyForecastByDay(
 // fetch Hourly Forecast Weather Data
 export async function fetchHourlyWeatherData(
   { lat, long }: FetchedWeatherData,
-  unit: string,
+  unit: UnitSystem,
 ) {
   const params = buildWeatherParams({ lat, long }, unit, "hourly");
   // Fetch data from Open Meteo API
@@ -311,11 +402,13 @@ export async function fetchHourlyWeatherData(
       ),
       weather_code: hourly.variables(0)!.valuesArray(),
       temperature_2m: hourly.variables(1)!.valuesArray(),
+      visibility: hourly.variables(2)!.valuesArray(),
+      surface_pressure: hourly.variables(3)!.valuesArray(),
     },
   };
 
   // Format data for hourly forecast
-  const hourlyForecastData = formatHourlyForecast(weatherData.hourly);
+  const hourlyForecastData = formatHourlyForecast(weatherData.hourly, unit);
   const hourlyForecastDataPerDay = groupHourlyForecastByDay(hourlyForecastData);
   return hourlyForecastDataPerDay;
 }
