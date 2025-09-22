@@ -36,6 +36,8 @@ type HourlyForecast = {
   description: string;
   iconSrc: string;
   temp: string;
+  visibility: string;
+  surfacePressure: string;
 };
 
 export type HourlyForecastDataPerDay = {
