@@ -29,7 +29,14 @@ function buildWeatherParams(
       "relative_humidity_2m",
       "apparent_temperature",
     ],
-    daily: ["weather_code", "temperature_2m_max", "temperature_2m_min"],
+    daily: [
+      "weather_code",
+      "temperature_2m_max",
+      "temperature_2m_min",
+      "sunrise",
+      "sunset",
+      "uv_index_max",
+    ],
     hourly: ["weather_code", "temperature_2m"],
   };
   // unit overrides
@@ -148,10 +155,37 @@ const weatherCodeMap: Record<number, { desc: string; iconSrc: string }> = {
   },
 };
 
+// map the UV index to a category
+export type UVCategory = {
+  level: string;
+  color: string;
+};
+
+export function mapUVIndex(uvIndex: number): UVCategory {
+  if (uvIndex <= 2) {
+    return { level: "Low", color: "bg-green-500" }; // green
+  } else if (uvIndex <= 5) {
+    return { level: "Moderate", color: "bg-yellow-400" }; // yellow
+  } else if (uvIndex <= 7) {
+    return { level: "High", color: "bg-orange-500" }; // orange
+  } else if (uvIndex <= 10) {
+    return { level: "Very High", color: "bg-red-600" }; // red
+  } else {
+    return { level: "Extreme", color: "bg-purple-700" }; // purple
+  }
+}
+
 // format the daily forecast data from the Open Meteo Weather API.
 export function formatDailyForecast(apiResponse: any): DailyForecast[] {
-  const { time, weather_code, temperature_2m_max, temperature_2m_min } =
-    apiResponse;
+  const {
+    time,
+    weather_code,
+    temperature_2m_max,
+    temperature_2m_min,
+    sunrise,
+    sunset,
+    uv_index_max,
+  } = apiResponse;
 
   const formatted = time.map((t: string, index: number) => {
     const code = weather_code[index];
@@ -167,6 +201,15 @@ export function formatDailyForecast(apiResponse: any): DailyForecast[] {
         `${Math.round(temperature_2m_max[index])}°`,
         `${Math.round(temperature_2m_min[index])}°`,
       ],
+      sunrise: new Date(sunrise[index]).toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      sunset: new Date(sunset[index]).toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      uvIndex: mapUVIndex(Math.round(uv_index_max[index])),
     };
   });
 
@@ -187,6 +230,9 @@ export async function fetchDailyWeatherData(
   const utcOffsetSeconds = response.utcOffsetSeconds();
   // Attributes for daily
   const daily = response.daily()!;
+  // Define Int64 variables so they can be processed accordingly
+  const sunrise = daily.variables(3)!;
+  const sunset = daily.variables(4)!;
   // Weather data
   const weatherData = {
     daily: {
@@ -204,6 +250,17 @@ export async function fetchDailyWeatherData(
       weather_code: daily.variables(0)!.valuesArray(),
       temperature_2m_max: daily.variables(1)!.valuesArray(),
       temperature_2m_min: daily.variables(2)!.valuesArray(),
+      // Map Int64 values to according structure
+      sunrise: [...Array(sunrise.valuesInt64Length())].map(
+        (_, i) =>
+          new Date((Number(sunrise.valuesInt64(i)) + utcOffsetSeconds) * 1000),
+      ),
+      // Map Int64 values to according structure
+      sunset: [...Array(sunset.valuesInt64Length())].map(
+        (_, i) =>
+          new Date((Number(sunset.valuesInt64(i)) + utcOffsetSeconds) * 1000),
+      ),
+      uv_index_max: daily.variables(5)!.valuesArray(),
     },
   };
   // Format data for daily forecast card
