@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import APIError from "@/components/api-error";
@@ -15,6 +16,41 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function Home() {
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then(() => console.log("✅ Service Worker registered"))
+        .catch((err) => console.error("SW registration failed:", err));
+    }
+  }, []);
+
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [showButton, setShowButton] = useState(false);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowButton(true);
+    };
+
+    window.addEventListener("beforeinstallprompt", handler as any);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handler as any);
+    };
+  }, []);
+
+  const handleInstall = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log("User install choice:", outcome);
+    setDeferredPrompt(null);
+    setShowButton(false);
+  };
+
   const fetchCurrentWeatherData = useWeatherStore(
     (state) => state.fetchCurrentWeatherData,
   );
@@ -236,6 +272,16 @@ export default function Home() {
             </section>
           )}
         </>
+      )}
+
+      {/* install button */}
+      {showButton && (
+        <button
+          onClick={handleInstall}
+          className="mt-4 rounded-lg bg-blue-500 px-4 py-2 text-white"
+        >
+          📲 Install App
+        </button>
       )}
     </main>
   );
