@@ -10,6 +10,7 @@ import SearchBar from "@/components/search-bar";
 import { Skeleton } from "@/components/skeleton";
 import THWPContainer from "@/components/thwp-container";
 import { thwpData } from "@/data";
+import { detectUserLocation } from "@/lib/utils";
 import { useWeatherStore } from "@/store/weatherStore";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -34,19 +35,31 @@ export default function Home() {
     hourlyForecastData,
     error: apiError,
     noResultFound,
+    setCoordinates,
+    setCityName,
   } = useWeatherStore();
 
   useEffect(() => {
-    fetchCurrentWeatherData();
-  }, [fetchCurrentWeatherData]);
-
-  useEffect(() => {
-    fetchDailyForecast();
-  }, [fetchDailyForecast]);
-
-  useEffect(() => {
-    fetchHourlyForecast();
-  }, [fetchHourlyForecast]);
+    async function init() {
+      const pos = await detectUserLocation();
+      if (pos) {
+        setCoordinates(pos.lat, pos.long);
+        // setCityName("Your Location");
+        setCityName(pos.cityName);
+        fetchCurrentWeatherData();
+        fetchDailyForecast();
+        fetchHourlyForecast();
+      } else {
+        // Default to Berlin, Germany if user doesn't allow location
+        setCoordinates(52.52, 13.419998);
+        setCityName("Berlin, Germany");
+        fetchCurrentWeatherData();
+        fetchDailyForecast();
+        fetchHourlyForecast();
+      }
+    }
+    init();
+  }, []);
 
   // get today's weekday name (e.g., "Tuesday")
   const today = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(

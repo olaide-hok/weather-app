@@ -29,3 +29,34 @@ export default function useGetCoordinates(place: string) {
     isError: error,
   };
 }
+
+type OpenMeteoResponse = {
+  results?: Array<{
+    name: string;
+    country?: string;
+    latitude: number;
+    longitude: number;
+  }>;
+};
+
+const nominatimReverseBase =
+  "https://nominatim.openstreetmap.org/reverse?format=jsonv2";
+
+export function useGetCoordinatesNomatim(
+  coords?: { lat: number; long: number } | null,
+) {
+  const url = coords
+    ? `${nominatimReverseBase}&lat=${encodeURIComponent(
+        String(coords.lat),
+      )}&lon=${encodeURIComponent(String(coords.long))}&accept-language=en`
+    : null;
+
+  const { data, error, isLoading } = useSWR(url, fetcher);
+
+  return {
+    geocodeData: data?.address || null,
+    isLoading,
+    isError: !!error,
+    error,
+  };
+}

@@ -7,10 +7,10 @@ import {
 } from "@/lib/utils";
 
 // Berlin, Germany coordinates for initial state
-const berlinGermanyCoordinates = {
-  lat: 52.52000045776367,
-  long: 13.419998168945312,
-};
+// const berlinGermanyCoordinates = {
+//   lat: 52.52000045776367,
+//   long: 13.419998168945312,
+// };
 
 interface CurrentWeatherData {
   time: string;
@@ -52,8 +52,8 @@ interface WeatherStoreState {
   currentWeatherData: CurrentWeatherData | null;
   dailyForecastData: DailyForecast[] | null;
   hourlyForecastData: HourlyForecastDataPerDay[] | null;
-  lat: number;
-  long: number;
+  lat: number | null;
+  long: number | null;
   loading: boolean;
   error: boolean;
   noResultFound: boolean;
@@ -77,12 +77,12 @@ export const useWeatherStore = create<WeatherStoreState>((set, get) => ({
     await get().fetchDailyForecastData();
     await get().fetchHourlyForecastData();
   },
-  cityName: "Berlin, Germany",
+  cityName: "Loading...",
   currentWeatherData: null,
   dailyForecastData: null,
   hourlyForecastData: null,
-  lat: berlinGermanyCoordinates.lat,
-  long: berlinGermanyCoordinates.long,
+  lat: null,
+  long: null,
   loading: false,
   error: false,
   noResultFound: false,
