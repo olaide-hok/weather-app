@@ -467,13 +467,17 @@ export async function detectUserLocation(): Promise<{
 
     const locationData = await fetch(url).then((response) => response.json());
 
+    const address = locationData?.address ?? {};
+
+    const cityName =
+      (address.state || address.city
+        ? `${address.state || address.city}, `
+        : "") + (address.country || "");
+
     return {
       lat: latitude,
       long: longitude,
-      cityName:
-        locationData.address.state + ", " + locationData.address.country ||
-        locationData.address.town ||
-        "",
+      cityName,
     };
   } catch (error) {
     console.error("detectUserLocation error:", error);
