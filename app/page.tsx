@@ -230,7 +230,10 @@ export default function Home() {
                     />
                   ))
                 ) : (
-                  <div className="scrollbar flex h-full flex-col gap-y-(--sp-200) overflow-y-auto pr-(--sp-100)">
+                  <div
+                    className="scrollbar flex h-full flex-col gap-y-(--sp-200) overflow-y-auto pr-(--sp-100)"
+                    tabIndex={0}
+                  >
                     {selectedData?.data?.map((item, index) => (
                       <HourlyForecastTile
                         key={index}
