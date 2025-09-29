@@ -82,8 +82,13 @@ const SearchBar = () => {
           <div className="absolute top-1/2 left-(--sp-300) -translate-y-1/2">
             <Icons.search />
           </div>
+          <label htmlFor="search-input" className="sr-only">
+            Search for a place
+          </label>
           <input
             type="text"
+            id="search-input"
+            name="search-input"
             placeholder="Search for a place..."
             className="w-full cursor-pointer rounded-(--radius-12) bg-(--clr-neutral-800) py-(--sp-200) pr-(--sp-300) pl-[3.75rem] text-(length:--fs-20) leading-(--lh-120) font-medium text-(--clr-neutral-0) placeholder:font-medium placeholder:text-(--clr-neutral-200)"
             value={searchText}
@@ -108,9 +113,26 @@ const SearchBar = () => {
             noResultFound ||
             !searchText.trim()
           }
+          aria-disabled={
+            selectedSuggestion === null ||
+            isLoading ||
+            noResultFound ||
+            !searchText.trim()
+          }
+          aria-describedby={
+            selectedSuggestion === null ||
+            isLoading ||
+            noResultFound ||
+            !searchText.trim()
+              ? "search-button-disabled"
+              : ""
+          }
         >
           Search
         </button>
+        <span id="search-button-disabled" className="sr-only">
+          Search is disabled until you enter a query.
+        </span>
       </div>
       {/* suggestions */}
       {isLoading ? (
