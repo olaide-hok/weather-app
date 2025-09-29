@@ -69,7 +69,7 @@ export default function Home() {
   const selectedData = hourlyForecastData?.find((d) => d.day === selectedDay);
 
   return (
-    <main className="flex w-[23.4375rem] flex-col items-center px-(--sp-200) pt-(--sp-200) pb-(--sp-600) md:w-full md:px-(--sp-300) md:pt-(--sp-300) md:pb-(--sp-1000) lg:px-(--sp-1400) lg:py-(--sp-600) 2xl:max-w-[90rem]">
+    <main className="flex w-[23.4375rem] flex-col items-center justify-self-center px-(--sp-200) pt-(--sp-200) pb-(--sp-600) md:w-full md:px-(--sp-300) md:pt-(--sp-300) md:pb-(--sp-1000) lg:px-(--sp-1400) lg:py-(--sp-600) 2xl:max-w-[90rem]">
       {/* header */}
       <Header />
       {apiError ? (
