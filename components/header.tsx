@@ -38,7 +38,7 @@ const Header = () => {
       {/* logo */}
       <Icons.logo />
       {/* units dropdown */}
-      <div
+      <nav
         ref={dropdownRef}
         className="relative cursor-pointer rounded-(--radius-6) bg-(--clr-neutral-800) focus-visible:outline-offset-2 focus-visible:outline-(--clr-neutral-0) focus-visible:outline-solid"
       >
@@ -58,7 +58,7 @@ const Header = () => {
         >
           <UnitsDropdown closeDropdown={() => setShowDropdown(false)} />
         </div>
-      </div>
+      </nav>
     </header>
   );
 };
