@@ -112,3 +112,9 @@ body {
   border-radius: var(--radius-full); /* fully rounded */
   border: 0.5rem solid var(--clr-neutral-600);
 }
+
+.scrollbar {
+  /* Firefox scrollbar styles */
+  scrollbar-width: thin; /* makes scrollbar thinner */
+  scrollbar-color: var(--clr-neutral-800) var(--clr-neutral-600); /* thumb and track colors */
+}
