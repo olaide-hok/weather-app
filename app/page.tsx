@@ -177,9 +177,9 @@ export default function Home() {
                 )}
                 {/* daily forecast */}
                 <div className="flex flex-col gap-y-(--sp-250)">
-                  <h3 className="text-(length:--fs-18) leading-(--lh-120) font-semibold text-(--clr-neutral-0)">
+                  <h2 className="text-(length:--fs-18) leading-(--lh-120) font-semibold text-(--clr-neutral-0)">
                     Daily forecast
-                  </h3>
+                  </h2>
                   <div className="grid grid-cols-3 gap-(--sp-200) md:grid-cols-7">
                     {loading
                       ? Array.from({ length: 7 }, (_, index) => (
