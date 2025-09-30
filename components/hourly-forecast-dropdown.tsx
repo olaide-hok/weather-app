@@ -1,9 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { Icons } from "./icons";
-import DaysDropdown from "./days-dropdown";
 import { HourlyForecastDataPerDay } from "@/store/weatherStore";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/select";
 
 interface HourlyForecastDropdownProps {
   selectedDay: string;
@@ -23,38 +27,37 @@ const HourlyForecastDropdown = ({
   hourlyForecastDataPerDay,
   loading,
 }: HourlyForecastDropdownProps) => {
-  const [showDropdown, setShowDropdown] = useState(false);
-
-  const handleDayClick = (day: string) => {
-    setSelectedDay(day);
-    setShowDropdown(false);
-  };
-
   return (
-    <div
-      className={`relative rounded-(--radius-8) bg-(--clr-neutral-600) focus-visible:outline-offset-2 focus-visible:outline-(--clr-neutral-0) focus-visible:outline-solid`}
-    >
-      <button
-        type="button"
-        className={` ${loading ? "cursor-not-allowed" : "cursor-pointer"} flex w-full items-center gap-x-(--sp-075) px-(--sp-200) py-(--sp-100)`}
-        onClick={() => setShowDropdown(!showDropdown)}
+    <Select value={selectedDay} onValueChange={setSelectedDay}>
+      <SelectTrigger
         disabled={loading}
+        className={`inline-flex items-center justify-between gap-x-(--sp-075) rounded-(--radius-8) bg-(--clr-neutral-600) px-(--sp-200) py-(--sp-100) text-(length:--fs-16) font-medium text-(--clr-neutral-0) focus:outline-none focus-visible:ring-2 focus-visible:ring-(--clr-neutral-0) ${
+          loading ? "cursor-not-allowed opacity-60" : "cursor-pointer"
+        }`}
+        aria-label="Select day"
       >
-        <span className="text-(length:--fs-16) leading-normal font-medium text-(--clr-neutral-0)">
-          {selectedDay}
-        </span>
-        <Icons.dropdown />
-      </button>
-      <div
-        className={` ${showDropdown ? "block" : "hidden"} absolute top-[3rem] right-0 z-10`}
+        <SelectValue placeholder="Select a day…" />
+      </SelectTrigger>
+
+      <SelectContent
+        className="right-0 z-20 mt-1 w-[13.375rem] overflow-hidden rounded-(--radius-12) border border-(--clr-neutral-600) bg-(--clr-neutral-800) shadow-[0px_8px_16px_0px_rgba(2,1,44,0.32)]"
+        position="popper"
+        side="bottom"
+        alignOffset={-95}
       >
-        <DaysDropdown
-          selectedDay={selectedDay}
-          selectDay={handleDayClick}
-          days={hourlyForecastDataPerDay}
-        />
-      </div>
-    </div>
+        <div className="p-(--sp-100)">
+          {hourlyForecastDataPerDay?.map((day, index) => (
+            <SelectItem
+              key={index}
+              value={day.day}
+              className="relative flex cursor-pointer items-center rounded-(--radius-8) px-(--sp-100) py-(--sp-125) text-(length:--fs-16) text-(--clr-neutral-0) select-none hover:bg-(--clr-neutral-700) focus:bg-(--clr-neutral-700) focus:outline-none"
+            >
+              {day.day}
+            </SelectItem>
+          ))}
+        </div>
+      </SelectContent>
+    </Select>
   );
 };
 
