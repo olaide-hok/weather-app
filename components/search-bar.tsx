@@ -137,7 +137,7 @@ const SearchBar = () => {
           <button
             type="button"
             onClick={startVoiceSearch}
-            className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full p-2 hover:bg-(--clr-neutral-700) focus:outline-none"
+            className="absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer rounded-full p-2 hover:bg-(--clr-neutral-700) focus:outline-none"
             aria-label="Start voice search"
           >
             {isListening ? <Mic /> : <MicOff />}
