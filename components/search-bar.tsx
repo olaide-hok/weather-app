@@ -101,19 +101,13 @@ const SearchBar = () => {
         {/* search button */}
         <button
           type="button"
-          className={`${selectedSuggestion === null || isLoading || noResultFound || !searchText ? "cursor-not-allowed" : "cursor-pointer"} font-dm-sans rounded-(--radius-12) bg-(--clr-blue-500) px-(--sp-300) py-(--sp-200) text-(length:--fs-20) leading-(--lh-120) font-medium text-(--clr-neutral-0) hover:bg-(--clr-blue-700) focus-visible:outline-offset-2 focus-visible:outline-(--clr-blue-500) focus-visible:outline-solid`}
+          className={`${selectedSuggestion === null || isLoading || noResultFound || !searchText ? "cursor-not-allowed opacity-50 focus:outline-none" : "cursor-pointer"} font-dm-sans rounded-(--radius-12) bg-(--clr-blue-500) px-(--sp-300) py-(--sp-200) text-(length:--fs-20) leading-(--lh-120) font-medium text-(--clr-neutral-0) hover:bg-(--clr-blue-700) focus-visible:outline-offset-2 focus-visible:outline-(--clr-blue-500) focus-visible:outline-solid`}
           onClick={() => {
             if (selectedSuggestion !== null) {
               searchWeatherInfo(selectedSuggestion);
             }
           }}
           disabled={
-            selectedSuggestion === null ||
-            isLoading ||
-            noResultFound ||
-            !searchText.trim()
-          }
-          aria-disabled={
             selectedSuggestion === null ||
             isLoading ||
             noResultFound ||
