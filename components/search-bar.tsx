@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Icons } from "./icons";
 import SearchDropdown from "./search-dropdown";
 import { useWeatherStore } from "@/store/weatherStore";
 import useDebounce from "@/hooks/useDebounce";
 import useGetCoordinates from "@/hooks/useGetCoordinates";
+import { Mic, MicOff } from "lucide-react";
 
 type Suggestion = {
   name: string;
@@ -33,6 +35,39 @@ const SearchBar = () => {
   const [suggestions, setSuggestions] = useState([]); // suggestions from geocode data to populate dropdown.
   const [selectedSuggestion, setSelectedSuggestion] =
     useState<Suggestion | null>(null);
+
+  // Voice search
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+
+  useEffect(() => {
+    if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
+      const SpeechRecognition =
+        (window as any).SpeechRecognition ||
+        (window as any).webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => setIsListening(true);
+      recognition.onend = () => setIsListening(false);
+
+      recognition.onresult = (event: SpeechRecognitionEvent) => {
+        const transcript = event.results[0][0].transcript;
+        setSearchText(transcript);
+        setSuppressSuggestions(false); // allow dropdown to show results
+      };
+
+      recognitionRef.current = recognition;
+    }
+  }, []);
+
+  const startVoiceSearch = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.start();
+    }
+  };
 
   const handleSelect = (suggestion: Suggestion) => {
     setSearchText(
@@ -97,6 +132,16 @@ const SearchBar = () => {
               setSuppressSuggestions(false); // allow suggestions to reappear if typing again
             }}
           />
+
+          {/* Voice search button */}
+          <button
+            type="button"
+            onClick={startVoiceSearch}
+            className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full p-2 hover:bg-(--clr-neutral-700) focus:outline-none"
+            aria-label="Start voice search"
+          >
+            {isListening ? <Mic /> : <MicOff />}
+          </button>
         </div>
         {/* search button */}
         <button
